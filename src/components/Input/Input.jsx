@@ -1,7 +1,7 @@
-import styled from '@emotion/styled'
-import React from 'react'
-import { Flex } from 'reflexbox'
-import PropTypes from 'prop-types'
+import styled from "@emotion/styled"
+import React from "react"
+import { Flex } from "reflexbox"
+import PropTypes from "prop-types"
 
 const InputContainer = styled(Flex)`
   label {
@@ -14,8 +14,8 @@ const InputContainer = styled(Flex)`
   }
 `
 
-const StyledInput = styled('input')`
-  background-color: #FFFFFF;
+const StyledInput = styled("input")`
+  background-color: #ffffff;
   color: #333333;
   padding: 8px 12px;
   border: 1px solid #c2c2c2;
@@ -37,12 +37,12 @@ const StyledInput = styled('input')`
   }
 `
 
-const Input = ({name, placeholder, label, isRequired}) => {
+const Input = ({ name, placeholder, label, isRequired }) => {
   return (
     <InputContainer width={1}>
       <label for={name}>
         {label}
-        <StyledInput id={name} name={name} placeholder={placeholder}/>
+        <StyledInput id={name} name={name} placeholder={placeholder} />
       </label>
     </InputContainer>
   )
@@ -50,7 +50,7 @@ const Input = ({name, placeholder, label, isRequired}) => {
 
 Input.propTypes = {
   name: PropTypes.string.isRequired,
-  placeholder: PropTypes.string.isRequired
+  placeholder: PropTypes.string.isRequired,
 }
 
 export default Input
