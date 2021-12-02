@@ -10,6 +10,9 @@ const StyledContainer = styled(Flex)`
   margin: 20px auto;
   max-width: 90%;
   width: 455px;
+  box-shadow: 3px 3px 6px -5px rgb(0 0 0 / 50%);
+  -webkit-box-shadow: 3px 3px 6px -5px rgb(0 0 0 / 50%);
+  -moz-box-shadow: 3px 3px 6px -5px rgb(0 0 0 / 0.5%);
 `
 
 const StoreVerify = () => {

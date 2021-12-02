@@ -26,6 +26,9 @@ const StyledInput = styled("input")`
   outline: none;
   width: 100%;
   margin-top: 8px;
+  box-shadow: 0px 0px 2px 0px rgb(0 0 0 / 20%);
+  -webkit-box-shadow: 0px 0px 2px 0px rgb(0 0 0 / 20%);
+  -moz-box-shadow: 0px 0px 2px 0px rgb(0 0 0 / 0.2%);
 
   &:hover {
     box-shadow: 0px 0px 2px 0px rgb(115 113 113 / 75%) inset;

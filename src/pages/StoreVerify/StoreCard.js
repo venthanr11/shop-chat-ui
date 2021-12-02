@@ -1,5 +1,5 @@
 import styled from "@emotion/styled"
-import React, { Fragment } from "react"
+import React, { Fragment, useState } from "react"
 import { Box, Flex } from "reflexbox"
 import Button from "../../components/Button"
 import Dropdown from "../../components/Dropdown"
@@ -16,12 +16,18 @@ const StyledContainer = styled(Flex)`
   border-radius: 10px;
   margin: 20px auto;
   padding: 16px;
+  box-shadow: 0px 0px 2px 0px rgb(0 0 0 / 30%);
+  -webkit-box-shadow: 0px 0px 8px -3px rgb(0 0 0 / 30%);
+  -moz-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.3);
 `
 
 const StoreIconContainer = styled(Box)`
+  width: calc(100% + 32px);
+  margin: -16px;
   img {
-    border-radius: 50%;
+    border-radius: 10px 10px 0 0;
     cursor: pointer;
+    height: 180px;
   }
 `
 
@@ -31,6 +37,49 @@ const StyledCallout = styled(Box)`
   border: 1px solid #ff3b3b;
   border-radius: 10px;
 `
+
+const StoreInfo = () => {
+  return (
+    <Fragment>
+      <Flex width={1} flexDirection="column">
+        <StoreIconContainer>
+          <img
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c2/Lifestyle_Stores_-_New.jpg/1200px-Lifestyle_Stores_-_New.jpg"
+            width="100%"
+            alt="store name"
+          />
+        </StoreIconContainer>
+        <Box mt={4}>
+          <Flex>
+            <Box>
+              <img src="/assets/images/store.svg" width={24} alt="lifestyle" />
+            </Box>
+            <Box ml="10px">
+              <BlockText>Lifestyle</BlockText>
+            </Box>
+          </Flex>
+        </Box>
+        <Box mt={3}>
+          <Flex>
+            <Box>
+              <img
+                src="/assets/images/address.svg"
+                width={24}
+                alt="lifestyle"
+              />
+            </Box>
+            <Box ml="24px">
+              <PrimaryText>
+                No.G-48, Ground Floor,142, Phoenix Market City, Velachery Rd,
+                Indira Gandh Nagar, Velachery, Chennai, Tamil Nadu 600042, India
+              </PrimaryText>
+            </Box>
+          </Flex>
+        </Box>
+      </Flex>
+    </Fragment>
+  )
+}
 
 const StoreContactInfo = () => {
   return (
@@ -82,9 +131,6 @@ const StoreContactInfo = () => {
           label="Mobile Number"
         />
       </Box>
-      <Box mt={4} mx="auto">
-        <Button>Update</Button>
-      </Box>
     </Flex>
   )
 }
@@ -135,47 +181,59 @@ const StoreProductInfo = () => {
           items={[]}
         />
       </Box>
-      <Box mt={4} mx="auto">
-        <Button>Complete Verification</Button>
-      </Box>
     </Flex>
   )
 }
 
 const StoreCard = () => {
+  const [wizardState, setWizardState] = useState(0)
   return (
-    <Fragment>
+    <Flex flexDirection="column">
       <StyledContainer flexDirection="column">
-        <Flex alignItems="center">
-          <StoreIconContainer>
-            <img
-              src="https://assets.api.uizard.io/api/cdn/stream/7e8b1883-e335-4103-8ffe-4b29ce546ffe.jpg"
-              width={40}
-              alt="store name"
-            />
-          </StoreIconContainer>
-          <Box ml={3}>
-            <BlockText>Lifestyle</BlockText>
-          </Box>
-        </Flex>
-        <Box mt={3}>
-          <PrimaryText>
-            No.G-48, Ground Floor,142, Phoenix Market City, Velachery Rd, Indira
-            Gandh Nagar, Velachery, Chennai, Tamil Nadu 600042, India
-          </PrimaryText>
-        </Box>
-      </StyledContainer>
-      <StyledContainer flexDirection="column">
-        <Box>
+        {wizardState === 0 ? (
+          <StoreInfo />
+        ) : wizardState === 1 ? (
           <StoreContactInfo />
-        </Box>
-      </StyledContainer>
-      <StyledContainer flexDirection="column">
-        <Box>
+        ) : (
           <StoreProductInfo />
-        </Box>
+        )}
       </StyledContainer>
-    </Fragment>
+      <Flex justifyContent="center">
+        {wizardState > 0 ? (
+          <Box mx={2}>
+            <Button
+              type="secondary"
+              onClick={() => {
+                setWizardState((wizardState) => --wizardState)
+              }}
+            >
+              Previous
+            </Button>
+          </Box>
+        ) : null}
+        {wizardState <= 1 ? (
+          <Box mx={2}>
+            <Button
+              onClick={() => {
+                setWizardState((wizardState) => ++wizardState)
+              }}
+            >
+              Next
+            </Button>
+          </Box>
+        ) : (
+          <Box mx={2}>
+            <Button
+              onClick={() => {
+                setWizardState((wizardState) => ++wizardState)
+              }}
+            >
+              Complete Verification
+            </Button>
+          </Box>
+        )}
+      </Flex>
+    </Flex>
   )
 }
 
