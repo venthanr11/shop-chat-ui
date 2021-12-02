@@ -1,6 +1,9 @@
 import "./App.css"
 import { css, Global } from "@emotion/react"
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+
 import QueryForm from "./pages/QueryForm"
+import StoreVerify from "./pages/StoreVerify"
 
 export const globalStyles = (
   <Global
@@ -28,7 +31,13 @@ function App() {
   return (
     <div className="App">
       {globalStyles}
-      <QueryForm />
+      <Router>
+        <Routes>
+          <Route path="/onboard" element={<StoreVerify />} />
+          <Route path="/users" element={<QueryForm />} />
+          <Route path="/" element={<QueryForm />} />
+        </Routes>
+      </Router>
     </div>
   )
 }
