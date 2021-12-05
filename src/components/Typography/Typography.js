@@ -1,7 +1,22 @@
 import styled from "@emotion/styled"
 
+const config = {
+  primary: {
+    color: "#707070",
+  },
+  success: {
+    color: "#089458",
+  },
+  error: {
+    color: "#ff3b3b",
+  },
+  secondary: {
+    color: "#b1b1b1",
+  },
+}
+
 export const PrimaryText = styled("p")`
-  color: #707070;
+  color: ${({ type = "primary" }) => config[type].color};
   line-height: 1.5;
   letter-spacing: 0.5px;
   margin: 0;

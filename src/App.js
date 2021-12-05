@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 
 import QueryForm from "./pages/QueryForm"
 import StoreVerify from "./pages/StoreVerify"
+import QueryInProgress from "./pages/QueryInProgress"
 
 export const globalStyles = (
   <Global
@@ -12,13 +13,14 @@ export const globalStyles = (
       body {
         padding: 0;
         margin: 0;
-        background: #ffffff;
+        background: #fdfdf2;
         min-height: 100%;
         font-size: 14px;
-        font-family: -apple-system, BlinkMacSystemFont, “Segoe UI”, “Roboto”,
-          “Oxygen”, “Ubuntu”, “Cantarell”, “Fira Sans”, “Droid Sans”,
-          “Helvetica Neue”, sans-serif;
+        font-family: "Inter", sans-serif;
         box-sizing: border-box;
+      }
+      input {
+        font-family: "Inter", sans-serif;
       }
       * {
         box-sizing: border-box;
@@ -35,6 +37,7 @@ function App() {
         <Routes>
           <Route path="/onboard" element={<StoreVerify />} />
           <Route path="/users" element={<QueryForm />} />
+          <Route path="/contacting-stores" element={<QueryInProgress />} />
           <Route path="/" element={<QueryForm />} />
         </Routes>
       </Router>
