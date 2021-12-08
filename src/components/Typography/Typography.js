@@ -17,15 +17,17 @@ const config = {
 
 export const PrimaryText = styled("p")`
   color: ${({ type = "primary" }) => config[type].color};
+  font-size: ${({size = 14}) => `${size}px`};
+  font-weight: ${({weight = 400}) => weight};
   line-height: 1.5;
-  letter-spacing: 0.5px;
   margin: 0;
 `
 
 export const BlockText = styled("p")`
   color: rgb(82, 82, 82);
+  font-size: ${({size = 16}) => `${size}px`};
+  font-weight: ${({weight = 600}) => weight};
   font-weight: 600;
-  font-size: 20px;
   margin: 0;
 `
 

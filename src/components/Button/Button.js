@@ -4,9 +4,9 @@ import React from "react"
 const StyledButton = styled("button")`
   position: relative;
   background: ${({ type }) => (type === "secondary" ? "#ffffff" : "#a6a676")};
-  padding: 12px 16px;
+  padding: 12px 6px;
   border: ${({ type }) =>
-    type === "secondary" ? "1px solid #1072db" : "none"};
+    type === "secondary" ? "2px solid #1072db" : "2px solid transparent"};
   border-radius: 10px;
   color: ${({ type }) => (type === "secondary" ? "#1072db" : "#ffffff")};
   font-size: 14px;

@@ -17,7 +17,7 @@ const StyledContainer = styled(Flex)`
 
 const StoreVerify = () => {
   return (
-    <StyledContainer p={3} flexDirection="column">
+    <StyledContainer py={3} px={4} flexDirection="column">
       <Flex alignItems="center">
         <Box>
           <img

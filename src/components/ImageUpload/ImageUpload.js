@@ -1,13 +1,16 @@
 import styled from "@emotion/styled"
-import React from "react"
+import React, { Fragment, useEffect, useState } from "react"
+import { Flex } from "reflexbox"
 
 const UploadContainer = styled("label")`
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
   cursor: pointer;
+  border-radius: 10px 10px 0 0;
 
   input {
     width: 100%;
@@ -16,11 +19,33 @@ const UploadContainer = styled("label")`
   }
 
   img {
-    border-radius: 10px;
+    border-radius: 10px 10px 0 0;
   }
 `
 
-function ImageUpload({ name, image, onLoad }) {
+const EditContainer = styled(Flex)`
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 4;
+`
+
+const EditOverlay = styled(Flex)`
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background: rgb(255, 255, 255, 0.6);
+  border-radius: 10px 10px 0 0;
+  z-index: 4;
+`
+
+function ImageUpload({ name, image, onLoad, isEdit }) {
+  const [showEdit, setShowEdit] = useState(false)
+
+  useEffect(() => {
+    setShowEdit(false)
+  }, [image])
+
   const loadImage = (input) => {
     if (input.target.files && input.target.files[0]) {
       var reader = new FileReader()
@@ -34,15 +59,36 @@ function ImageUpload({ name, image, onLoad }) {
   }
 
   return (
-    <UploadContainer htmlFor={name} width="100%">
+    <UploadContainer
+      htmlFor={name}
+      width="100%"
+      onMouseLeave={() => setShowEdit(false)}
+      onMouseOver={() => setShowEdit(true)}
+    >
       <input id={name} type="file" onChange={loadImage} />
+      <EditContainer />
       {!!image ? (
-        <img src={image} width="100%" alt="preview" />
+        <Fragment>
+          {isEdit && showEdit && (
+            <EditOverlay
+              width="100%"
+              alignItems="center"
+              justifyContent="center"
+            >
+              <img src="/assets/images/edit.svg" width={38} alt="edit image" />
+            </EditOverlay>
+          )}
+          <img src={image} width="100%" height="100%" alt="preview" />
+        </Fragment>
       ) : (
-        <img src="/assets/images/plus.svg" width={24} alt="add product" />
+        <img src="/assets/images/plus.svg" width={24} alt="add image" />
       )}
     </UploadContainer>
   )
+}
+
+ImageUpload.defaultProps = {
+  isEdit: false,
 }
 
 export default ImageUpload
