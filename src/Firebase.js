@@ -1,5 +1,5 @@
-import { initializeApp } from 'firebase/app';
-import { getDatabase } from "firebase/database";
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/database'
 
 const firebaseConfig = {
     apiKey: "AIzaSyAru7MN61NjxdI1t5MAvKdDer1LziJwENY",
@@ -8,12 +8,12 @@ const firebaseConfig = {
     storageBucket: "shopchat-7df10.appspot.com",
     messagingSenderId: "423170830679",
     appId: "1:423170830679:web:7eefbacbcec814a5e90e12",
-    measurementId: "${config.measurementId}"
+    databaseURL: "https://shopchat-7df10-default-rtdb.asia-southeast1.firebasedatabase.app"
   };
 
-const app = initializeApp(firebaseConfig);
+const app = firebase.initializeApp(firebaseConfig)
 
-const firebaseDatabase = getDatabase(app)
+const firebaseDatabase = firebase.database()
 
 export {
     app,

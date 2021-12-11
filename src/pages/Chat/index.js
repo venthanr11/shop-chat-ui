@@ -8,7 +8,7 @@ export default class Chat extends Component {
 
     this.state = {
       messages: [],
-      username: ''
+      username: 'Mukesh'
     };
 
     this.onAddMessage = this.onAddMessage.bind(this);
@@ -24,11 +24,13 @@ export default class Chat extends Component {
   
       let messagesObj = snapshot.val();
       let messages = [];
-      Object.keys(messagesObj).forEach(key =>  messages.push(messagesObj[key]));
-      messages = messages.map((message) => { return {text: message.text, user: message.user, id: message.key}})
-      this.setState(prevState => ({
-        messages: messages,
-      }));
+      if(messagesObj) {
+        Object.keys(messagesObj).forEach(key =>  messages.push(messagesObj[key]));
+        messages = messages.map((message) => { return {text: message.text, user: message.user, id: message.key}})
+        this.setState(prevState => ({
+          messages: messages,
+        }));
+      }
     
     });
 
@@ -37,14 +39,20 @@ export default class Chat extends Component {
   onAddMessage(event) {
     event.preventDefault();
     const chatRef = ref(firebaseDatabase, 'messages/1111');
-    push(chatRef,{text: this.input.value, user: this.state.username})
+    push(chatRef,{text: this.input.value, user: this.state.username}, function(error) {
+      if (error) {
+        alert("Data could not be saved." + error);
+      } else {
+        alert("Data saved successfully.");
+      }
+    })
     this.input.value = '';
   }
 
   render() {
     return (
       <div>
-        <div className="padding-13 messages-div">
+        <div className="padding-13 messages-div" >
             <h2>Direct Chat</h2>
             {this.state.messages.map((message) => {
              const _class = message.user === this.state.username ? 'message-left container' : 'message-right container';
