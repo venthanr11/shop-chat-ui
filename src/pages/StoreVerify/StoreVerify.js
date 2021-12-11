@@ -1,7 +1,10 @@
 import styled from "@emotion/styled"
-import React from "react"
+import axios from "axios"
+import React, { useEffect, useState } from "react"
+import { useParams } from "react-router-dom"
 import { Flex, Box } from "reflexbox"
 import { PrimaryText } from "../../components/Typography"
+import { getData } from "../../utils/api-helper"
 import StoreCard from "./StoreCard"
 
 const StyledContainer = styled(Flex)`
@@ -16,6 +19,22 @@ const StyledContainer = styled(Flex)`
 `
 
 const StoreVerify = () => {
+  const { storeIdentifier } = useParams()
+  const [storeInfo, setStoreInfo] = useState(null)
+
+  useEffect(() => {
+    getData({
+      url: `/resource/v0/resource_for_verification/${storeIdentifier}`,
+    })
+      .then(({ data }) => {
+        setStoreInfo(data)
+      })
+      .catch((err) => console.log(err))
+  }, [])
+
+  if (!storeInfo) {
+    return null
+  }
   return (
     <StyledContainer py={3} px={4} flexDirection="column">
       <Flex alignItems="center">
@@ -36,7 +55,7 @@ const StoreVerify = () => {
         </PrimaryText>
       </Box>
       <Box>
-        <StoreCard></StoreCard>
+        <StoreCard storeInfo={storeInfo}></StoreCard>
       </Box>
     </StyledContainer>
   )

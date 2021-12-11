@@ -13,20 +13,26 @@ const config = {
   secondary: {
     color: "#b1b1b1",
   },
+  smoke: {
+    color: "rgb(82, 82, 82)",
+  },
+  placeholder: {
+    color: "#bbbbbb",
+  },
 }
 
 export const PrimaryText = styled("p")`
   color: ${({ type = "primary" }) => config[type].color};
-  font-size: ${({size = 14}) => `${size}px`};
-  font-weight: ${({weight = 400}) => weight};
+  font-size: ${({ size = 14 }) => `${size}px`};
+  font-weight: ${({ weight = 400 }) => weight};
   line-height: 1.5;
   margin: 0;
 `
 
 export const BlockText = styled("p")`
-  color: rgb(82, 82, 82);
-  font-size: ${({size = 16}) => `${size}px`};
-  font-weight: ${({weight = 600}) => weight};
+  color: ${({ type = "smoke" }) => config[type].color};
+  font-size: ${({ size = 16 }) => `${size}px`};
+  font-weight: ${({ weight = 600 }) => weight};
   font-weight: 600;
   margin: 0;
 `

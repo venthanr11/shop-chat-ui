@@ -32,7 +32,7 @@ const LoaderContainer = styled(Box)`
 
 const EllipsisLoader = () => {
   return (
-    <LoaderContainer width="21px">
+    <LoaderContainer width="26px">
       <div className="loading"></div>
     </LoaderContainer>
   )

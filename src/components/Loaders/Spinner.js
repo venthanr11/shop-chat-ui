@@ -12,22 +12,22 @@ const StyledSpinner = styled(Flex)`
   .loader-sm {
     width: 20px;
     height: 20px;
-    border: 4px solid #e0e0e0;
-    border-top: 4px solid #3498db;
+    border: 4px solid #cc99ff;
+    border-top: 4px solid #f8f3fd;
   }
 
   .loader-md {
     width: 40px;
     height: 40px;
-    border: 6px solid #e0e0e0;
-    border-top: 6px solid #3498db;
+    border: 6px solid #cc99ff;
+    border-top: 6px solid #f8f3fd;
   }
 
   .loader-lg {
     width: 60px;
     height: 60px;
-    border: 8px solid #e0e0e0;
-    border-top: 8px solid #3498db;
+    border: 8px solid #cc99ff;
+    border-top: 8px solid #f8f3fd;
   }
 
   /* Safari */
