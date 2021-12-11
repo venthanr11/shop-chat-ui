@@ -37,12 +37,13 @@ const StyledInputContainer = styled(Box)`
   border: 1px solid #f2f2f2;
   border-radius: 10px;
   margin-bottom: 4px;
+  cursor: pointer;
 `
 
 const StyledInput = styled("input")`
   background: transparent;
   color: #333333;
-  padding: 8px 10px;
+  padding: 8px 0;
   border-radius: 5px;
   font-weight: 500;
   font-size: 14px;
@@ -203,24 +204,37 @@ const Dropdown = ({
           </Flex>
           {isOpen ? (
             <MenuContainer {...getMenuProps()} flexDirection="column">
-              <StyledInputContainer className="flex-grow">
-                <StyledInput
-                  id={name}
-                  name={name}
-                  placeholder={`Search ${placeholder}`}
-                  value={searchKey}
-                  onChange={(e) => {
-                    if (!isOpen) {
-                      openMenu()
-                    }
-                    setSearchKey(e.target.value)
-                  }}
-                  disabled={
-                    isSingleSelect &&
-                    !!Object.keys(selectedItems).length &&
-                    !isOpen
-                  }
-                />
+              <StyledInputContainer>
+                <Flex alignItems="center" px={2}>
+                  <Box className="flex-grow">
+                    <StyledInput
+                      id={name}
+                      name={name}
+                      placeholder={`Search ${placeholder}`}
+                      value={searchKey}
+                      onChange={(e) => {
+                        if (!isOpen) {
+                          openMenu()
+                        }
+                        setSearchKey(e.target.value)
+                      }}
+                      disabled={
+                        isSingleSelect &&
+                        !!Object.keys(selectedItems).length &&
+                        !isOpen
+                      }
+                    />
+                  </Box>
+                  <label for={name}>
+                    <Box className="cursor-pointer">
+                      <img
+                        src="/assets/images/search.svg"
+                        width={14}
+                        alt="search"
+                      />
+                    </Box>
+                  </label>
+                </Flex>
               </StyledInputContainer>
               {filteredItems.length === 0 ? (
                 <Flex justifyContent="center" alignItems="center" p={2}>

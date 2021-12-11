@@ -198,6 +198,7 @@ const StoreContactInfo = ({ storeInfo, onPrevious, onNext }) => {
               label="Designation"
               items={CONSTANTS.DESIGNATIONS}
               isRequired
+              isSingleSelect
             />
           </Box>
           <Box mt={3}>
