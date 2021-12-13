@@ -19,6 +19,9 @@ const config = {
   placeholder: {
     color: "#bbbbbb",
   },
+  brand: {
+    color: "#8A2BE2",
+  },
 }
 
 export const PrimaryText = styled("p")`
@@ -27,6 +30,7 @@ export const PrimaryText = styled("p")`
   font-weight: ${({ weight = 400 }) => weight};
   line-height: 1.5;
   margin: 0;
+  display: ${({ inline }) => (inline ? "inline" : "block")};
 `
 
 export const BlockText = styled("p")`

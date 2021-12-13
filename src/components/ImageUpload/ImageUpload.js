@@ -90,18 +90,20 @@ function ImageUpload({ name, image, onLoad, isEdit }) {
               <img src="/assets/images/edit.svg" width={38} alt="edit image" />
             </EditOverlay>
           )}
-          <CloseContainer
-            alignItems="center"
-            justifyContent="center"
-            onClick={() => onLoad("", null)}
-          >
-            <img
-              src="/assets/images/close.svg"
-              width="10px"
-              height="10px"
-              alt="close"
-            />
-          </CloseContainer>
+          {!isEdit && (
+            <CloseContainer
+              alignItems="center"
+              justifyContent="center"
+              onClick={() => onLoad("", null)}
+            >
+              <img
+                src="/assets/images/close.svg"
+                width="10px"
+                height="10px"
+                alt="close"
+              />
+            </CloseContainer>
+          )}
           <img src={image} width="100%" height="100%" alt="preview" />
         </Fragment>
       ) : (

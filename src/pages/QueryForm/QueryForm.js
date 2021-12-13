@@ -207,76 +207,97 @@ const QueryForm = () => {
 
   return (
     <FormLayout>
-      <Box width={1}>
-        <QueryHeading>What are you looking for?</QueryHeading>
-      </Box>
-      <Formik
-        initialValues={{
-          name: "",
-          title: "",
-          description: "",
-          regions: [],
-          categories: [],
-          query_images: [],
-        }}
-        validationSchema={validationSchema}
-        validateOnBlur={false}
-        validateOnChange={false}
-        onSubmit={postQuery}
-      >
-        {({ setFieldValue }) => (
-          <Form>
-            <FieldContainer mx="auto" mt={3}>
-              <Input
-                name="name"
-                placeholder="John Doe"
-                label="Your Name"
-                isRequired
-              />
-            </FieldContainer>
-            <FieldContainer mx="auto" mt="14px">
-              <Input
-                name="title"
-                placeholder="Coffee Table"
-                label="Product Title"
-                max={16}
-                isRequired
-              />
-            </FieldContainer>
-            <FieldContainer mx="auto" mt="14px">
-              <Input
-                name="description"
-                placeholder="Describe your product"
-                label="Product Description"
-              />
-            </FieldContainer>
-            <CategoryDropdowns />
-            <FieldContainer mx="auto" mt="14px">
-              <Dropdown
-                name="regions"
-                placeholder="Choose your area"
-                label="Choose your area"
-                items={regionList}
-                isRequired
-              />
-            </FieldContainer>
-            <FieldContainer mx="auto" mt="14px">
-              <FormLabel labelText="Add Product Images" />
-              <Flex flexWrap="wrap" mt={3}>
-                {images.map(({ image }, index) => {
-                  return (
-                    <Box key={index} mr={3} mb={2}>
+      <Flex flexDirection="column" width={1}>
+        <Box width={1}>
+          <QueryHeading>What are you looking for?</QueryHeading>
+        </Box>
+        <Formik
+          initialValues={{
+            name: "",
+            title: "",
+            description: "",
+            regions: [],
+            categories: [],
+            query_images: [],
+          }}
+          validationSchema={validationSchema}
+          validateOnBlur={false}
+          validateOnChange={false}
+          onSubmit={postQuery}
+        >
+          {({ setFieldValue }) => (
+            <Form>
+              <FieldContainer mx="auto" mt={3}>
+                <Input
+                  name="name"
+                  placeholder="John Doe"
+                  label="Your Name"
+                  isRequired
+                />
+              </FieldContainer>
+              <FieldContainer mx="auto" mt="14px">
+                <Input
+                  name="title"
+                  placeholder="Coffee Table"
+                  label="Product Title"
+                  max={16}
+                  isRequired
+                />
+              </FieldContainer>
+              <FieldContainer mx="auto" mt="14px">
+                <Input
+                  name="description"
+                  placeholder="Describe your product"
+                  label="Product Description"
+                />
+              </FieldContainer>
+              <CategoryDropdowns />
+              <FieldContainer mx="auto" mt="14px">
+                <Dropdown
+                  name="regions"
+                  placeholder="Choose your area"
+                  label="Choose your area"
+                  items={regionList}
+                  isRequired
+                />
+              </FieldContainer>
+              <FieldContainer mx="auto" mt="14px">
+                <FormLabel labelText="Add Product Images" />
+                <Flex flexWrap="wrap" mt={3}>
+                  {images.map(({ image }, index) => {
+                    return (
+                      <Box key={index} mr={3} mb={2}>
+                        <ImageUploadContainer>
+                          <ImageUpload
+                            name={`image-${index}`}
+                            image={image}
+                            onLoad={(image, file) => {
+                              setImages(([...prevImages]) => {
+                                if (image === "" && file === null) {
+                                  prevImages.splice(index, 1)
+                                } else {
+                                  prevImages.splice(index, 1, { image, file })
+                                }
+                                setFieldValue(
+                                  "query_images",
+                                  prevImages.map(({ file }) => file)
+                                )
+                                return prevImages
+                              })
+                            }}
+                          />
+                        </ImageUploadContainer>
+                      </Box>
+                    )
+                  })}
+                  {images.length < 5 && (
+                    <Box>
                       <ImageUploadContainer>
                         <ImageUpload
-                          name={`image-${index}`}
-                          image={image}
+                          name="newImage"
                           onLoad={(image, file) => {
                             setImages(([...prevImages]) => {
-                              if (image === "" && file === null) {
-                                prevImages.splice(index, 1)
-                              } else {
-                                prevImages.splice(index, 1, { image, file })
-                              }
+                              prevImages.push({ image, file })
                               setFieldValue(
                                 "query_images",
                                 prevImages.map(({ file }) => file)
@@ -287,35 +308,16 @@ const QueryForm = () => {
                         />
                       </ImageUploadContainer>
                     </Box>
-                  )
-                })}
-                {images.length < 5 && (
-                  <Box>
-                    <ImageUploadContainer>
-                      <ImageUpload
-                        name="newImage"
-                        onLoad={(image, file) => {
-                          setImages(([...prevImages]) => {
-                            prevImages.push({ image, file })
-                            setFieldValue(
-                              "query_images",
-                              prevImages.map(({ file }) => file)
-                            )
-                            return prevImages
-                          })
-                        }}
-                      />
-                    </ImageUploadContainer>
-                  </Box>
-                )}
-              </Flex>
-            </FieldContainer>
-            <FieldContainer className="text-center" mx="auto" mt={4}>
-              <FormSubmit>Search</FormSubmit>
-            </FieldContainer>
-          </Form>
-        )}
-      </Formik>
+                  )}
+                </Flex>
+              </FieldContainer>
+              <FieldContainer className="text-center" mx="auto" mt={4}>
+                <FormSubmit>Search</FormSubmit>
+              </FieldContainer>
+            </Form>
+          )}
+        </Formik>
+      </Flex>
     </FormLayout>
   )
 }

@@ -378,28 +378,26 @@ const StoreProductInfo = ({ storeInfo, onPrevious, onNext }) => {
   )
 }
 
-const StoreCard = ({ storeInfo }) => {
-  const [wizardState, setWizardState] = useState(0)
-
+const StoreCard = ({ storeInfo, wizardState, onWizardUpdate }) => {
   return (
     <Flex flexDirection="column">
       <StyledContainer flexDirection="column">
         {wizardState === 0 ? (
           <StoreInfo
             storeInfo={storeInfo}
-            onNext={() => setWizardState((wizardState) => ++wizardState)}
+            onNext={() => onWizardUpdate(++wizardState)}
           />
         ) : wizardState === 1 ? (
           <StoreContactInfo
             storeInfo={storeInfo}
-            onPrevious={() => setWizardState((wizardState) => --wizardState)}
-            onNext={() => setWizardState((wizardState) => ++wizardState)}
+            onPrevious={() => onWizardUpdate(--wizardState)}
+            onNext={() => onWizardUpdate(++wizardState)}
           />
         ) : (
           <StoreProductInfo
             storeInfo={storeInfo}
-            onPrevious={() => setWizardState((wizardState) => --wizardState)}
-            onNext={() => setWizardState((wizardState) => ++wizardState)}
+            onPrevious={() => onWizardUpdate(--wizardState)}
+            onNext={() => onWizardUpdate(++wizardState)}
           />
         )}
       </StyledContainer>
