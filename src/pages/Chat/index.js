@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { firebaseDatabase } from '../../Firebase';
 import { ref,onValue,push } from "firebase/database";
+import { FormLayout } from '../../components/Layouts';
 
 export default class Chat extends Component {
   constructor() {
@@ -51,8 +52,9 @@ export default class Chat extends Component {
 
   render() {
     return (
-      <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', flexDirection : "column", margin: 100}}>
-        <div >
+      <FormLayout>
+      <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', flexDirection : "column", margin: 16}}>
+        <div style={{overflowY: 'scroll', height:700, scrollBehavior:'smooth'}} >
             <h2>Chat with Crossword</h2>
             {this.state.messages.map((message) => {
              const _class = message.user === this.state.username ? 'message-left container' : 'message-right container';
@@ -65,11 +67,12 @@ export default class Chat extends Component {
             )
             })}
         </div>
-      <div className="container textarea-div">
-        <textarea className="text-area" ref={node => this.input = node}></textarea>
-        <button className="btn btn-info send-btn " onClick={this.onAddMessage}>Send</button>
+      <div style={{display: 'flex', flexDirection:'row', alignItems: 'self-end', margin:0}}>
+        <textarea style={{alignSelf:'end', margin:0}} ref={node => this.input = node}></textarea>
+        <button style={{alignSelf:'end', margin:8}} onClick={this.onAddMessage}>Send</button>
       </div>
     </div>
+    </FormLayout>
     );
   }
 }
