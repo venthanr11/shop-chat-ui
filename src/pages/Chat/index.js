@@ -8,7 +8,7 @@ export default class Chat extends Component {
 
     this.state = {
       messages: [],
-      username: 'Mukesh'
+      username: ''
     };
 
     this.onAddMessage = this.onAddMessage.bind(this);
@@ -16,7 +16,7 @@ export default class Chat extends Component {
 
   componentWillMount() {
     const username = localStorage.getItem('chat_username');
-    this.setState({username: username ? username : 'Unknown'})
+    this.setState({username: username ? username : 'Mukesh'})
 
     const chatRef = ref(firebaseDatabase, 'messages/1111');
   
@@ -51,16 +51,16 @@ export default class Chat extends Component {
 
   render() {
     return (
-      <div>
-        <div className="padding-13 messages-div" >
-            <h2>Direct Chat</h2>
+      <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', flexDirection : "column", margin: 100}}>
+        <div >
+            <h2>Chat with Crossword</h2>
             {this.state.messages.map((message) => {
              const _class = message.user === this.state.username ? 'message-left container' : 'message-right container';
             return (
-                <div className={_class}>
-                  <h6 className="name-heading">{message.user}</h6>
-                  <p className="marg-left-10">{message.text}</p>
-                  <span className="time-left"></span>
+
+                <div style={{ background: "#f0d5d3" , width : 280, padding: 2, margin : 24, borderRadius: 16}}>
+                  <h6 style={{color:"##292626", marginLeft: 8, marginBottom: 4, marginTop:12}}>{message.user}</h6>
+                  <p style={{color:"##292626", marginLeft: 16, marginTop: 0, marginBottom:12}} >{message.text}</p>
                 </div>
             )
             })}
