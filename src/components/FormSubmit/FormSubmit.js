@@ -16,7 +16,7 @@ const SpinnerContainer = styled(Box)`
 const FormSubmit = ({ children }) => {
   const { submitForm, isSubmitting } = useFormikContext()
   return (
-    <Button buttonType="submit" onClick={submitForm} disabled={isSubmitting}>
+    <Button htmlType="submit" onClick={submitForm} disabled={isSubmitting}>
       {children}
       {isSubmitting && (
         <SpinnerContainer>

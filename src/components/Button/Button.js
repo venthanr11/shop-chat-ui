@@ -3,20 +3,22 @@ import React from "react"
 
 const StyledButton = styled("button")`
   position: relative;
-  background: ${({ type }) => (type === "secondary" ? "#ffffff" : "#a6a676")};
+  background: ${({ buttonType }) =>
+    buttonType === "secondary" ? "#ffffff" : "#8a2be2"};
   padding: 12px 6px;
-  border: ${({ type }) =>
-    type === "secondary" ? "2px solid #1072db" : "2px solid transparent"};
+  border: ${({ buttonType }) =>
+    buttonType === "secondary" ? "2px solid #8a2be2" : "2px solid transparent"};
   border-radius: 10px;
-  color: ${({ type }) => (type === "secondary" ? "#1072db" : "#ffffff")};
+  color: ${({ buttonType }) =>
+    buttonType === "secondary" ? "#8a2be2" : "#ffffff"};
   font-size: 14px;
   font-weight: 600;
   min-width: 160px;
   margin: auto;
   cursor: pointer;
   letter-spacing: 0.5px;
-  ${({ type }) =>
-    type === "secondary"
+  ${({ buttonType }) =>
+    buttonType === "secondary"
       ? ""
       : `
       box-shadow: 0px 0px 2px 0px rgb(0 0 0 / 50%);
@@ -31,17 +33,21 @@ const StyledButton = styled("button")`
   }
 `
 
-const Button = ({ children, onClick, type, buttonType, disabled }) => {
+const Button = ({ children, onClick, type, htmlType, disabled }) => {
   return (
     <StyledButton
       onClick={onClick}
-      type={type}
-      buttonType={buttonType}
+      buttonType={type}
+      type={htmlType}
       disabled={disabled}
     >
       {children}
     </StyledButton>
   )
+}
+
+Button.defaultProps = {
+  htmlType: "button",
 }
 
 export default Button

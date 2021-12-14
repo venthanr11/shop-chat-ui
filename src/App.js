@@ -14,11 +14,12 @@ export const globalStyles = (
       body {
         padding: 0;
         margin: 0;
-        background: #fdfdf2;
+        background: #f8f3fd;
         min-height: 100%;
         font-size: 14px;
         font-family: "Inter", sans-serif;
         box-sizing: border-box;
+        color: #333333;
       }
       input {
         font-family: "Inter", sans-serif;
@@ -36,9 +37,12 @@ function App() {
       {globalStyles}
       <Router>
         <Routes>
-          <Route path="/onboard" element={<StoreVerify />} />
+          <Route path="/onboard/:storeIdentifier" element={<StoreVerify />} />
           <Route path="/users" element={<QueryForm />} />
-          <Route path="/contacting-stores" element={<QueryInProgress />} />
+          <Route
+            path="/users/contacting-stores"
+            element={<QueryInProgress />}
+          />
           <Route path="/" element={<QueryForm />} />
           <Route path="1111/chat" element={<Chat/>} />
         </Routes>

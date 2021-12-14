@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { Fragment, useEffect, useState } from "react"
 import Downshift from "downshift"
 import { Flex, Box } from "reflexbox"
 import styled from "@emotion/styled"
@@ -33,9 +33,17 @@ const DropdownTrigger = styled(Flex)`
   }
 `
 
+const StyledInputContainer = styled(Box)`
+  border: 1px solid #f2f2f2;
+  border-radius: 10px;
+  margin-bottom: 4px;
+  cursor: pointer;
+`
+
 const StyledInput = styled("input")`
+  background: transparent;
   color: #333333;
-  padding: 4px 0;
+  padding: 8px 0;
   border-radius: 5px;
   font-weight: 500;
   font-size: 14px;
@@ -43,6 +51,7 @@ const StyledInput = styled("input")`
   border: none;
   outline: none;
   width: 100%;
+  pointer-events: ${({ disabled }) => (disabled ? "none" : "auto")};
 
   &::placeholder {
     color: #bbbbbb;
@@ -82,7 +91,16 @@ const ErrorContainer = styled(Box)`
   font-size: 12px;
 `
 
-const Dropdown = ({ name, placeholder, label, items, isRequired }) => {
+const Dropdown = ({
+  name,
+  placeholder,
+  label,
+  items,
+  isRequired,
+  noItemsMessage,
+  onChange,
+  isSingleSelect,
+}) => {
   const [searchKey, setSearchKey] = useState("")
   const [selectedItems, setSelectedItems] = useState({})
   const { errors, setFieldValue } = useFormikContext()
@@ -90,6 +108,7 @@ const Dropdown = ({ name, placeholder, label, items, isRequired }) => {
   const removeItem = (itemKey) => {
     const { [itemKey]: itemToRemove, ...rest } = selectedItems
     setSelectedItems(rest)
+    onChange(rest)
   }
 
   const filteredItems = items.filter(
@@ -103,6 +122,7 @@ const Dropdown = ({ name, placeholder, label, items, isRequired }) => {
     if (selectedItemKeys.length === 0) {
       return
     }
+    onChange(selectedItems)
     setFieldValue(
       name,
       selectedItemKeys.map((item) => selectedItems[item])
@@ -115,6 +135,10 @@ const Dropdown = ({ name, placeholder, label, items, isRequired }) => {
         setSearchKey("")
         if (!!selectedItems[selection.value]) {
           removeItem(selection.value)
+          return
+        }
+        if (isSingleSelect) {
+          setSelectedItems({ [selection.value]: selection })
           return
         }
         setSelectedItems((items) => ({
@@ -141,42 +165,33 @@ const Dropdown = ({ name, placeholder, label, items, isRequired }) => {
               labelText={label}
               isRequired
             />
-            <DropdownTrigger
-              alignItems="center"
-              onClick={() => openMenu()}
-              flexWrap="wrap"
-            >
-              <Flex flexWrap="wrap">
-                {Object.keys(selectedItems).map((itemKey, index) => (
-                  <Box mr={1} my="2px" key={index}>
-                    <Tags
-                      id={selectedItems[itemKey].value}
-                      text={selectedItems[itemKey].label}
-                      onClose={() => {
-                        removeItem(selectedItems[itemKey].value)
-                      }}
-                    />
-                  </Box>
-                ))}
-              </Flex>
-              <Flex className="flex-grow">
-                <Box
-                  className="flex-grow"
-                  {...getRootProps({}, { suppressRefError: true })}
-                >
-                  <StyledInput
-                    id={name}
-                    name={name}
-                    placeholder={placeholder}
-                    value={searchKey}
-                    onChange={(e) => {
-                      if (!isOpen) {
-                        openMenu()
-                      }
-                      setSearchKey(e.target.value)
-                    }}
-                  />
-                </Box>
+            <DropdownTrigger alignItems="center" onClick={() => openMenu()}>
+              <Box className="flex-grow">
+                {!!Object.keys(selectedItems).length ? (
+                  isSingleSelect ? (
+                    <PrimaryText>
+                      {selectedItems[Object.keys(selectedItems)[0]].label}
+                    </PrimaryText>
+                  ) : (
+                    <Flex flexWrap="wrap">
+                      {Object.keys(selectedItems).map((itemKey, index) => (
+                        <Box mr={1} my="2px" key={index}>
+                          <Tags
+                            id={selectedItems[itemKey].value}
+                            text={selectedItems[itemKey].label}
+                            onClose={() => {
+                              removeItem(selectedItems[itemKey].value)
+                            }}
+                          />
+                        </Box>
+                      ))}
+                    </Flex>
+                  )
+                ) : (
+                  <PrimaryText type="placeholder">{placeholder}</PrimaryText>
+                )}
+              </Box>
+              <Box>
                 <ChevronButton isOpen={isOpen} mt="6px">
                   <img
                     src="/assets/images/chevron-down.svg"
@@ -184,27 +199,56 @@ const Dropdown = ({ name, placeholder, label, items, isRequired }) => {
                     alt="dropdown"
                   />
                 </ChevronButton>
-              </Flex>
+              </Box>
             </DropdownTrigger>
           </Flex>
           {isOpen ? (
             <MenuContainer {...getMenuProps()} flexDirection="column">
+              <StyledInputContainer>
+                <Flex alignItems="center" px={2}>
+                  <Box className="flex-grow">
+                    <StyledInput
+                      id={name}
+                      name={name}
+                      placeholder={`Search ${placeholder}`}
+                      value={searchKey}
+                      onChange={(e) => {
+                        if (!isOpen) {
+                          openMenu()
+                        }
+                        setSearchKey(e.target.value)
+                      }}
+                      disabled={
+                        isSingleSelect &&
+                        !!Object.keys(selectedItems).length &&
+                        !isOpen
+                      }
+                    />
+                  </Box>
+                  <label for={name}>
+                    <Box className="cursor-pointer">
+                      <img
+                        src="/assets/images/search.svg"
+                        width={14}
+                        alt="search"
+                      />
+                    </Box>
+                  </label>
+                </Flex>
+              </StyledInputContainer>
               {filteredItems.length === 0 ? (
-                <Flex
-                  flexDirection="column"
-                  justifyContent="center"
-                  alignItems="center"
-                  p={2}
-                >
-                  <Box>
+                <Flex justifyContent="center" alignItems="center" p={2}>
+                  <Box mt="6px">
                     <img
                       src="/assets/images/not-found.svg"
-                      width={24}
+                      width={18}
                       alt="no items found"
                     />
                   </Box>
-                  <Box mt={1}>
-                    <PrimaryText>No items found</PrimaryText>
+                  <Box mt={1} ml={2}>
+                    <PrimaryText size={12} weight={600}>
+                      {noItemsMessage}
+                    </PrimaryText>
                   </Box>
                 </Flex>
               ) : (
@@ -232,6 +276,12 @@ const Dropdown = ({ name, placeholder, label, items, isRequired }) => {
       )}
     </Downshift>
   )
+}
+
+Dropdown.defaultProps = {
+  noItemsMessage: "No items found",
+  onChange: () => {},
+  isSingleSelect: false,
 }
 
 export default Dropdown

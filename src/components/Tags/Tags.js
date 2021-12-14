@@ -3,7 +3,7 @@ import React from "react"
 import { Flex, Box } from "reflexbox"
 
 const StyledTagContainer = styled(Flex)`
-  background: #e9e9e9;
+  background: #f8f3fd;
   border-radius: 10px;
   padding: 5px 10px;
   font-size: 12px;

@@ -46,17 +46,20 @@ const QueryInProgress = ({}) => {
         <Box>
           <Spinner size="lg" />
         </Box>
-        <Box mt={4}>
+        <Box mt={4} className="text-center">
+          <BlockText>Hang tight, we're connecting you to the stores!</BlockText>
+        </Box>
+        <Box mt={5}>
           <StatusContainer flexDirection="column">
             <Connector />
-            <Flex alignItems="center">
+            <Flex alignItems="center" className="text-center">
               <Pointer type="success" />
-              <Box ml={3} className="flex-grow">
-                <PrimaryText type="success">
+              <Box ml={3} mx={5} className="flex-grow">
+                <BlockText size={14} type="success">
                   Creating your chat site
-                </PrimaryText>
+                </BlockText>
               </Box>
-              <Box ml={4} mt={1}>
+              <Box mt={1}>
                 <img
                   src="/assets/images/verified.svg"
                   width={16}
@@ -64,23 +67,23 @@ const QueryInProgress = ({}) => {
                 />
               </Box>
             </Flex>
-            <Flex alignItems="center" mt={4}>
+            <Flex alignItems="center" mt={2} className="text-center">
               <Pointer type="inProgress" />
-              <Box ml={3} className="flex-grow">
+              <Box ml={3} mx={5} className="flex-grow">
                 <BlockText>Contacting stores near you</BlockText>
               </Box>
-              <Box ml={4} mt={1}>
+              <Box mt={1}>
                 <EllipsisLoader />
               </Box>
             </Flex>
-            <Flex alignItems="center" mt={4}>
+            <Flex alignItems="center" mt={2} className="text-center">
               <Pointer type="waiting" />
-              <Box ml={3} className="flex-grow">
-                <PrimaryText type="secondary">
+              <Box ml={3} mx={5} className="flex-grow">
+                <PrimaryText type="secondary" size={13}>
                   Setting up your workspace
                 </PrimaryText>
               </Box>
-              <Box ml={4} mt={1}>
+              <Box mt={1}>
                 <img
                   src="/assets/images/pending.svg"
                   width={16}
@@ -88,14 +91,14 @@ const QueryInProgress = ({}) => {
                 />
               </Box>
             </Flex>
-            <Flex alignItems="center" mt={4}>
+            <Flex alignItems="center" mt={2} className="text-center">
               <Pointer type="waiting" />
-              <Box ml={3} className="flex-grow">
-                <PrimaryText type="secondary">
+              <Box ml={3} mx={5} className="flex-grow">
+                <PrimaryText type="secondary" size={13}>
                   Redirecting to your chat site
                 </PrimaryText>
               </Box>
-              <Box ml={4} mt={1}>
+              <Box mt={1}>
                 <img
                   src="/assets/images/pending.svg"
                   width={16}
