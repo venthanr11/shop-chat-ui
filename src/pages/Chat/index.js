@@ -35,7 +35,7 @@ export default class Chat extends Component {
       let messages = [];
       if(messagesObj) {
         Object.keys(messagesObj).forEach(key =>  messages.push(messagesObj[key]));
-        messages = messages.map((message) => { return {text: message.text, user: message.user, id: message.key}})
+        messages = messages.map((message) => { return {text: message.text, user: message.user, id: message.key, timestamp : message.timestamp, urls : message.urls}})
         this.setState(prevState => ({
           messages: messages,
         }));
@@ -48,14 +48,14 @@ export default class Chat extends Component {
   onAddMessage(event) {
     event.preventDefault();
     const messsage = this.input.value;
-    this.pushMessage(messsage)
+    this.pushMessage(messsage,[])
     this.input.value = '';
   }
 
 
-  pushMessage(textMessage) {
+  pushMessage(textMessage, uris) {
     const chatRef = ref(firebaseDatabase, 'messages/1111');
-    push(chatRef,{text : textMessage, user: this.state.username}, function(error) {
+    push(chatRef,{text : textMessage, user: this.state.username, timestamp:  Date.now(), urls : uris}, function(error) {
       if (error) {
         alert("Data could not be saved." + error);
       } else {
@@ -93,11 +93,7 @@ onPhotoSelected(file) {
 }
 
 onImageUploadSuccess(uploadedUrl) {
-  this.pushMessage(uploadedUrl)
-}
-
-isImageUrl(text){
-  return text && text.includes('res.cloudinary.com')
+  this.pushMessage("",uploadedUrl)
 }
 
 handleImageError = e => { 
@@ -106,6 +102,7 @@ handleImageError = e => {
 
 
   render() {
+    const username = this.state.username
   
     return (
       <FormLayout>
@@ -115,7 +112,7 @@ handleImageError = e => {
             {this.state.messages.map((message) => {
           
             return (
-                  <ChatItem  name= {message.user} message = {message.text} timestamp = {"8: 45 PM"} urls = {[]} key={message.timestamp} sent = {true}/>
+                  <ChatItem  name= {message.user} message = {message.text} timestamp = {message.timestamp} urls = {message.urls} key={message.timestamp} sent = {username == message.user}/>
                 )
             })}
         </div>

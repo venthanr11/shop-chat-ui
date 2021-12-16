@@ -1,12 +1,18 @@
 import { Box, Flex } from "reflexbox"
 import { PrimaryText } from "../../components/Typography"
+const moment= require('moment') 
+
+
 
 const ChatItem = ({ name, message, timestamp, urls, sent }) => {
 
-    const imagePresent = urls && urls.size > 0
+    const imagePresent = (urls) ? true : false
 
     const style = {borderRadius: 16, padding:8, width:260, marginRight:16, marginLeft:16,backgroundColor: sent ? "#f7e1e1" : "#baf5d4", alignSelf: sent? 'end' : 'start'}
 
+    console.log(imagePresent + " " + urls)
+
+    const timestampString = getTimestampString(timestamp)
 
     return (
         
@@ -16,14 +22,14 @@ const ChatItem = ({ name, message, timestamp, urls, sent }) => {
                 {name}
             </PrimaryText>
 
-            {imagePresent && <img src={urls[0]}  style={{height: 160, width:160, }} />}
+            {imagePresent && <img src={urls.replace(/['"]+/g, '')}  style={{height: 160, width:160, marginTop: 8, marginLeft: 8}} />}
 
             <PrimaryText size={16} style={{fontWeight: 'bold', flexGrow:1}}>
                 {message}
             </PrimaryText>
 
             <PrimaryText size={10} style={{marginLeft:190}} >
-                {timestamp}
+                {timestampString}
             </PrimaryText>
             </Box>
 
@@ -31,6 +37,14 @@ const ChatItem = ({ name, message, timestamp, urls, sent }) => {
     )
 
 
+}
+
+function getTimestampString(timestamp) {
+    if (timestamp) {
+        var t = new Date(timestamp );
+        return moment(t).format('LT');
+    }
+    return ""
 }
 
 
