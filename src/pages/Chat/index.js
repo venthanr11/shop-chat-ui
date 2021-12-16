@@ -6,7 +6,8 @@ import ImageUpload from '../../components/ImageUpload/ImageUpload';
 import ChatItem from './ChatItem';
 import { PrimaryText } from '../../components/Typography';
 
-export default class Chat extends Component {
+ export default class Chat extends Component {
+
   constructor() {
     super();
 
@@ -27,7 +28,7 @@ export default class Chat extends Component {
     const username = localStorage.getItem('chat_username');
     this.setState({username: username ? username : 'Mukesh'})
 
-    const chatRef = ref(firebaseDatabase, 'messages/1111');
+    const chatRef = ref(firebaseDatabase, 'messages/' + this.props.chatId);
   
     onValue(chatRef, (snapshot) => {
   
@@ -54,7 +55,7 @@ export default class Chat extends Component {
 
 
   pushMessage(textMessage, uris) {
-    const chatRef = ref(firebaseDatabase, 'messages/1111');
+    const chatRef = ref(firebaseDatabase, 'messages/' + this.props.chatId);
     push(chatRef,{text : textMessage, user: this.state.username, timestamp:  Date.now(), urls : uris}, function(error) {
       if (error) {
         alert("Data could not be saved." + error);

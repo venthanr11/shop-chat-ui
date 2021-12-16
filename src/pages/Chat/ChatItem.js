@@ -10,8 +10,6 @@ const ChatItem = ({ name, message, timestamp, urls, sent }) => {
 
     const style = {borderRadius: 16, padding:8, width:260, marginRight:16, marginLeft:16,backgroundColor: sent ? "#f7e1e1" : "#baf5d4", alignSelf: sent? 'end' : 'start'}
 
-    console.log(imagePresent + " " + urls)
-
     const timestampString = getTimestampString(timestamp)
 
     return (

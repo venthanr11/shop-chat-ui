@@ -6,6 +6,7 @@ import QueryForm from "./pages/QueryForm"
 import StoreVerify from "./pages/StoreVerify"
 import QueryInProgress from "./pages/QueryInProgress"
 import Chat from "./pages/Chat"
+import { useLocation, useParams } from "react-router";
 
 export const globalStyles = (
   <Global
@@ -31,6 +32,12 @@ export const globalStyles = (
   />
 )
 
+export const WrappedComponent = props => {
+    const { chatId } = useParams()
+  return <Chat chatId = {chatId} />
+}
+
+
 function App() {
   return (
     <div className="App">
@@ -44,7 +51,7 @@ function App() {
             element={<QueryInProgress />}
           />
           <Route path="/" element={<QueryForm />} />
-          <Route path="1111/chat" element={<Chat/>} />
+          <Route path="/chat/:chatId" element={<WrappedComponent/>} />
         </Routes>
       </Router>
     </div>
