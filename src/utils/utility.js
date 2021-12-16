@@ -9,4 +9,6 @@ const uuid = () => {
   })
 }
 
-export { getUserToken, setUserToken, uuid }
+function isImageUrl(text){return text.contains('res.cloudinary.com')}
+
+export { getUserToken, setUserToken, uuid, isImageUrl }
