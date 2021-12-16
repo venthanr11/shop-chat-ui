@@ -5,6 +5,7 @@ import { FormLayout } from '../../components/Layouts';
 import ImageUpload from '../../components/ImageUpload/ImageUpload';
 import ChatItem from './ChatItem';
 import { PrimaryText } from '../../components/Typography';
+import { useParams } from 'react-router';
 
  export default class Chat extends Component {
 
@@ -134,4 +135,10 @@ handleImageError = e => {
     </FormLayout>
     );
   }
+}
+
+
+export const WrappedComponent = props => {
+  const { chatId } = useParams()
+return <Chat chatId = {chatId} />
 }
