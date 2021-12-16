@@ -115,7 +115,7 @@ handleImageError = e => {
             {this.state.messages.map((message) => {
           
             return (
-                  <ChatItem  name= {message.user} message = {message.text} timestamp = {"8: 45 PM"} urls = {[]} key={message.timestamp}/>
+                  <ChatItem  name= {message.user} message = {message.text} timestamp = {"8: 45 PM"} urls = {[]} key={message.timestamp} sent = {true}/>
                 )
             })}
         </div>
