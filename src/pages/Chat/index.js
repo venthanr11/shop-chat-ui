@@ -119,8 +119,8 @@ handleImageError = e => {
             })}
         </div>
 
-      <div style={{display: 'flex', flexDirection:'row', margin:0, width: 400, height:70, padding: 16, justifyContent:'left', alignItems:'center', backgroundColor: '#FFFFFF'}}>
-        <textarea style={{ margin:0, width: 600}} ref={node => this.input = node}></textarea>
+      <div style={{display: 'flex', flexDirection:'row', margin:0, flex:1, height:70, padding: 16, justifyContent:'left', alignItems:'center', backgroundColor: '#FFFFFF'}}>
+        <textarea style={{ margin:0, flex:1}} ref={node => this.input = node}></textarea>
         <div style={{marginLeft:16, marginRight:16}}>
         <ImageUpload
           name="newImage"
