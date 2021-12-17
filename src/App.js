@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
 import QueryForm from "./pages/QueryForm"
 import StoreVerify from "./pages/StoreVerify"
 import QueryInProgress from "./pages/QueryInProgress"
+import ChatsHome from "./pages/ChatsHome"
 
 export const globalStyles = (
   <Global
@@ -43,6 +44,7 @@ function App() {
             element={<QueryInProgress />}
           />
           <Route path="/" element={<QueryForm />} />
+          <Route path="/chats" element={<ChatsHome />} />
         </Routes>
       </Router>
     </div>
