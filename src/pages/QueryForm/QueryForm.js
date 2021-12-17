@@ -62,7 +62,7 @@ const CategoryDropdowns = () => {
   const [selectedCategories, setSelectedCategories] = useState([])
 
   useEffect(() => {
-    getData({ url: "/department/v0/" })
+    getData({ url: "/department/v0/all" })
       .then(({ data }) =>
         setDepartments(data.map(({ id, name }) => ({ label: name, value: id })))
       )
@@ -193,7 +193,7 @@ const QueryForm = () => {
       })
       const config = {
         headers: {
-          "content-type": "multipart/form-data",
+          "Content-Type": "multipart/form-data",
         },
       }
       postData({ url: "/qi/v0/post_query", formData }, config)

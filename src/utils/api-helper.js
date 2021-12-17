@@ -1,11 +1,11 @@
 import axios from "axios"
 
-const apiHost = "http://localhost:9002/api"
+const apiHost = "http://ec2-15-207-111-0.ap-south-1.compute.amazonaws.com:8080/api"
 
 const getData = ({ url }) =>
   new Promise((resolve, reject) => {
     axios
-      .get(`${apiHost}${url}`)
+      .get(`${apiHost}${url}`, { data: {} })
       .then(({ data }) => {
         resolve(data)
       })
