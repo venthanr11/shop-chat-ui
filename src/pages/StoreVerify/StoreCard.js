@@ -84,7 +84,7 @@ const StoreInfo = ({ storeInfo, onNext }) => {
                 },
                 config
               )
-                .then(({ data }) => setStoreProfileImage(data))
+                .then(({ data }) => setStoreProfileImage(data.media_url))
                 .catch((err) => console.log(err))
             }}
             isEdit={true}
@@ -236,7 +236,7 @@ const StoreProductInfo = ({ storeInfo, onPrevious, onNext }) => {
   const [selectedCategories, setSelectedCategories] = useState([])
 
   useEffect(() => {
-    getData({ url: "/department/v0/" })
+    getData({ url: "/department/v0/all" })
       .then(({ data }) =>
         setDepartments(data.map(({ id, name }) => ({ label: name, value: id })))
       )

@@ -22,7 +22,7 @@ const AnswerContainer = styled(Box)`
 
 export default function ShopchatInfo() {
   return (
-    <InfoContainer mt={2} p={3}>
+    <InfoContainer mt={2} py={3}>
       <QuestionContainer>
         <Box>
           <PrimaryText size={16} weight={600} type="brand">

@@ -10,10 +10,11 @@ import ShopchatInfo from "./ShopchatInfo"
 import StoreCard from "./StoreCard"
 
 const Stepper = styled(Flex)`
-  width: 100%;
+  width: 75%;
   height: 3px;
   background: #dedede;
   position: relative;
+  margin: 24px auto;
 `
 
 const StepContainer = styled(Box)`
@@ -42,7 +43,7 @@ const Connector = styled(Box)`
 `
 
 const VerificationContainer = styled(Box)`
-  width: 455px;
+  width: 391px;
   max-width: 90%;
 `
 
@@ -70,8 +71,8 @@ const StoreVerify = () => {
         <Box>
           <ShopchatInfo />
         </Box>
-        <VerificationContainer>
-          <Stepper my={3}>
+        <VerificationContainer mx={3}>
+          <Stepper>
             <Flex justifyContent="space-between" width="100%">
               {[0, 0, 0].map((item, idx) => (
                 <Fragment>

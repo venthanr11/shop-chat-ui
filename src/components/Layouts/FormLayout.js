@@ -1,17 +1,25 @@
 import styled from "@emotion/styled"
 import React from "react"
 import { Flex, Box } from "reflexbox"
-import { PrimaryText } from "../Typography"
+import { BlockText, PrimaryText } from "../Typography"
 
 const Container = styled(Flex)`
   max-width: 90%;
-  width: ${({ autoWidth }) => (autoWidth ? "auto" : "455px")};
+  width: ${({ autoWidth }) => (autoWidth ? "fit-content" : "455px")};
 `
 
 const CardContainer = styled(Flex)`
   background-color: #ffffff;
   border-radius: 10px;
   min-height: 400px;
+  box-shadow: 0px 0px 12px -4px rgb(60 60 60 / 50%);
+  -webkit-box-shadow: 0px 0px 12px -4px rgb(60 60 60 / 50%);
+  -moz-box-shadow: 0px 0px 12px -4px rgb(60 60 60 / 0.5%);
+`
+
+const ContactUsContainer = styled(Box)`
+  background-color: #ffffff;
+  border-radius: 10px;
   box-shadow: 0px 0px 12px -4px rgb(60 60 60 / 50%);
   -webkit-box-shadow: 0px 0px 12px -4px rgb(60 60 60 / 50%);
   -moz-box-shadow: 0px 0px 12px -4px rgb(60 60 60 / 0.5%);
@@ -44,10 +52,33 @@ const FormLayout = ({ autoWidth, children }) => {
         </Flex>
       </Box>
       <Box mt={3}>
-        <CardContainer py={3} px={4}>
+        <CardContainer py={3} px={3}>
           {children}
         </CardContainer>
       </Box>
+      <ContactUsContainer mt={3} p={4}>
+        <Flex flexDirection="column">
+          <Box>
+            <BlockText type="brand">Contact Us</BlockText>
+          </Box>
+          <Box mt={2}>
+            <Flex alignItems="center">
+              <Box>
+                <PrimaryText inline>Have a question? Whatsapp Us!</PrimaryText>
+              </Box>
+              <Box ml={2}>
+                <a href="https://wa.me/919790946084">
+                  <img
+                    src="/assets/images/whatsapp.svg"
+                    width={20}
+                    alt="whatsapp"
+                  />
+                </a>
+              </Box>
+            </Flex>
+          </Box>
+        </Flex>
+      </ContactUsContainer>
     </Container>
   )
 }
