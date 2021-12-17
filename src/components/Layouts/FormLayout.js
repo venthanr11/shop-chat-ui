@@ -25,7 +25,17 @@ const ContactUsContainer = styled(Box)`
   -moz-box-shadow: 0px 0px 12px -4px rgb(60 60 60 / 0.5%);
 `
 
-const FormLayout = ({ autoWidth, children }) => {
+const messages = {
+  store: {
+    tagLine: "Chat and engage directly with customers in your locality",
+  },
+  customer: {
+    tagLine: "Chat and search for products from shops in your locality",
+  },
+}
+
+const FormLayout = ({ autoWidth, isStore, children }) => {
+  const messageKey = isStore ? 'store' : 'customer'
   return (
     <Container
       autoWidth={autoWidth}
@@ -47,7 +57,7 @@ const FormLayout = ({ autoWidth, children }) => {
         </Flex>
         <Flex mt={3} mb={2} justifyContent="center">
           <PrimaryText size={16} weight={500}>
-            Chat and engage directly with customers in your locality
+            {messages[messageKey].tagLine}
           </PrimaryText>
         </Flex>
       </Box>
@@ -81,6 +91,10 @@ const FormLayout = ({ autoWidth, children }) => {
       </ContactUsContainer>
     </Container>
   )
+}
+
+FormLayout.defaultProps = {
+  isStore: false
 }
 
 export default FormLayout

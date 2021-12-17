@@ -66,7 +66,7 @@ const StoreVerify = () => {
     return null
   }
   return (
-    <FormLayout autoWidth>
+    <FormLayout autoWidth isStore>
       <Flex justifyContent="space-evenly" width={1} flexWrap="wrap-reverse">
         <Box>
           <ShopchatInfo />

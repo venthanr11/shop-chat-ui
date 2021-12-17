@@ -1,5 +1,6 @@
 import styled from "@emotion/styled"
-import React from "react"
+import React, {useEffect} from "react"
+import { useNavigate } from "react-router-dom"
 import { Flex, Box } from "reflexbox"
 import { FormLayout } from "../../components/Layouts"
 import { EllipsisLoader, Spinner } from "../../components/Loaders"
@@ -35,6 +36,10 @@ const Connector = styled(Box)`
 `
 
 const QueryInProgress = ({}) => {
+  const navigate = useNavigate()
+  useEffect(() => {
+    setTimeout(() => navigate('/chats'), 10000)
+  }, [])
   return (
     <FormLayout>
       <Flex
@@ -42,6 +47,7 @@ const QueryInProgress = ({}) => {
         alignItems="center"
         justifyContent="center"
         className="height-inherit"
+        mx="auto"
       >
         <Box>
           <Spinner size="lg" />
