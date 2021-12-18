@@ -138,7 +138,9 @@ const ChatsHome = () => {
 
   useEffect(() => {
     if(chatGroups.length > 0) {
-      clearInterval(intervalRef.current)
+      // @todo do not stop polling, since we need
+      // to update UI with new messages as they come
+      // clearInterval(intervalRef.current)
     }
   }, [chatGroups])
 
