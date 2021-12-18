@@ -20,8 +20,7 @@ const ChatItem = ({ name, message, timestamp, urls, sent }) => {
             </PrimaryText>
 
             {urls && urls.map((url) => {
-                console.log(url)
-                 return <img src={url.replace(/[\[\]']+/g, '')}  style={{height: 160, width:160, marginTop: 8, marginLeft: 8}}/> })
+                 return <img src={url.replace(/[\[\]']+/g, '')}  style={{alignSelf: 'baseline', maxWidth:220, marginTop: 8, marginLeft: 8}}/> })
                  }
 
             <PrimaryText size={15} style={{fontWeight: 'bold', flexGrow:1}}>
