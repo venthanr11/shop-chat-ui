@@ -6,6 +6,7 @@ import QueryForm from "./pages/QueryForm"
 import StoreVerify from "./pages/StoreVerify"
 import QueryInProgress from "./pages/QueryInProgress"
 import ChatsHome from "./pages/ChatsHome"
+import Chat, { WrappedComponent } from "./pages/Chat"
 
 export const globalStyles = (
   <Global
@@ -45,6 +46,7 @@ function App() {
           />
           <Route path="/" element={<QueryForm />} />
           <Route path="/chats" element={<ChatsHome />} />
+          <Route path="/chat/:chatId" element={<WrappedComponent/>} />
         </Routes>
       </Router>
     </div>

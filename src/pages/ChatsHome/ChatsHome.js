@@ -132,7 +132,7 @@ const ChatsHome = () => {
       postData({ url: "/chat/v0/customer_chat_groups", payload })
         .then(({ data }) => setChatGroups(data))
         .catch((err) => console.log(err))
-    },5000)
+    },3000)
     intervalRef.current = intervalId
   }, [])
 

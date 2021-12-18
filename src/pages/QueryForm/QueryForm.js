@@ -12,7 +12,7 @@ import FormLabel from "../../components/FormLabel/FormLabel"
 import FormSubmit from "../../components/FormSubmit"
 import { FormLayout } from "../../components/Layouts"
 import { getData, postData } from "../../utils/api-helper"
-import { getUserToken, setUserToken, uuid } from "../../utils/utility"
+import { getUserToken, setUserName, setUserToken, uuid } from "../../utils/utility"
 
 const QueryHeading = styled("p")`
   font-weight: 700;
@@ -174,6 +174,7 @@ const QueryForm = () => {
       postData({ url: "/customer/v0/create", payload })
         .then(({ data }) => {
           setUserToken(data.uniqueId)
+          setUserName(data.name)
           resolve(data.uniqueId)
         })
         .catch((err) => console.log(err))
