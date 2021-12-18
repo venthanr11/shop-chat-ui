@@ -77,7 +77,7 @@ const FormLayout = ({ autoWidth, isStore, children }) => {
                 <PrimaryText inline>Have a question? Whatsapp Us!</PrimaryText>
               </Box>
               <Box ml={2}>
-                <a href="https://wa.me/919790946084">
+                <a href="https://wa.me/919790946084" target="_blank" rel="noreferrer">
                   <img
                     src="/assets/images/whatsapp.svg"
                     width={20}

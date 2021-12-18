@@ -42,7 +42,7 @@ const ErrorContainer = styled(Box)`
   font-size: 12px;
 `
 
-const Input = ({ name, placeholder, label, isRequired }) => {
+const Input = ({ name, placeholder, label, isRequired, maxlength }) => {
   const { errors } = useFormikContext()
   return (
     <Flex width={1} flexDirection="column">
@@ -50,7 +50,12 @@ const Input = ({ name, placeholder, label, isRequired }) => {
         <FormLabel htmlFor={name} labelText={label} isRequired={isRequired} />
       </Box>
       <Box>
-        <StyledInput id={name} name={name} placeholder={placeholder} />
+        <StyledInput
+          id={name}
+          name={name}
+          placeholder={placeholder}
+          maxLength={maxlength}
+        />
       </Box>
       {!!errors[name] && <ErrorContainer mt={2}>{errors[name]}</ErrorContainer>}
     </Flex>
