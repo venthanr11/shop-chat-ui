@@ -6,18 +6,26 @@ import ImageUpload from "../../components/ImageUpload/ImageUpload"
 import ChatItem from "./ChatItem"
 import { PrimaryText } from "../../components/Typography"
 import { useParams } from "react-router"
-import { getUserToken } from "../../utils/utility"
+import { getCustomerToken, getUserName, getUserToken } from "../../utils/utility"
 import { postData } from "../../utils/api-helper"
 
 export default class Chat extends Component {
+
+  isCustomer = false;
+  
   constructor() {
     super()
 
     this.state = {
       messages: [],
-      username: "",
+      username: getUserName(),
       userId: getUserToken(),
+      customerId: getCustomerToken()
+  
     }
+
+    this.isCustomer = this.state.userId != undefined
+    console.log(this.isCustomer)
 
     this.onAddMessage = this.onAddMessage.bind(this)
     this.onPhotoSelected = this.onPhotoSelected.bind(this)
@@ -28,8 +36,6 @@ export default class Chat extends Component {
   }
 
   componentWillMount() {
-    const username = localStorage.getItem("chat_username")
-    this.setState({ username: username ? username : "Mukesh" })
 
     const chatRef = ref(firebaseDatabase, "messages/" + this.props.chatId)
 
@@ -76,12 +82,13 @@ export default class Chat extends Component {
 
     const payload = {
       unique_customer_id: getUserToken(),
-      senderName: this.state.username,
-      sender_id: this.state.userId,
+      sender_name: this.state.username,
+      sender_id: this.isCustomer ? this.state.userId : this.state.customerId,
       timestamp: Date.now(),
       conversation_id: this.props.chatId,
       message_text: textMessage,
       image_urls: uris,
+      sender_type: this.isCustomer ? "CUSTOMER" : "RESOURCE"
     }
 
     const config = {
@@ -130,7 +137,7 @@ export default class Chat extends Component {
   }
 
   render() {
-    const { userId } = this.state
+    const selfId = this.state.userId ? this.state.userId : this.state.customerId;
 
     return (
       <FormLayout>
@@ -171,7 +178,7 @@ export default class Chat extends Component {
                   timestamp={message.timestamp}
                   urls={message.urls}
                   key={message.timestamp}
-                  sent={userId == message.senderId}
+                  sent={selfId == message.senderId}
                 />
               )
             })}

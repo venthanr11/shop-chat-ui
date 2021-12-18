@@ -6,6 +6,7 @@ import { Flex, Box } from "reflexbox"
 import { FormLayout } from "../../components/Layouts"
 import { PrimaryText } from "../../components/Typography"
 import { getData } from "../../utils/api-helper"
+import { setCustomerToken } from "../../utils/utility"
 import ShopchatInfo from "./ShopchatInfo"
 import StoreCard from "./StoreCard"
 
@@ -57,6 +58,7 @@ const StoreVerify = () => {
       url: `/resource/v0/resource_for_verification/${storeIdentifier}`,
     })
       .then(({ data }) => {
+        setCustomerToken(data.id)
         setStoreInfo(data)
       })
       .catch((err) => console.log(err))
