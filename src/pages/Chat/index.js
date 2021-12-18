@@ -37,7 +37,7 @@ import { useParams } from 'react-router';
       let messages = [];
       if(messagesObj) {
         Object.keys(messagesObj).forEach(key =>  messages.push(messagesObj[key]));
-        messages = messages.map((message) => { return {text: message.text, user: message.user, id: message.key, timestamp : message.timestamp, urls : message.urls}})
+        messages = messages.map((message) => { return {text: message.messageText, user: message.senderName, id: message.key, timestamp : message.timestamp, urls : message.imageURLs}})
         this.setState(prevState => ({
           messages: messages,
         }));
@@ -57,7 +57,7 @@ import { useParams } from 'react-router';
 
   pushMessage(textMessage, uris) {
     const chatRef = ref(firebaseDatabase, 'messages/' + this.props.chatId);
-    push(chatRef,{text : textMessage, user: this.state.username, timestamp:  Date.now(), urls : uris}, function(error) {
+    push(chatRef,{messageText : textMessage, senderName: this.state.username, timestamp:  Date.now(), imageURLs : uris}, function(error) {
       if (error) {
         alert("Data could not be saved." + error);
       } else {

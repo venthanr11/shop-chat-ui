@@ -6,7 +6,6 @@ const moment= require('moment')
 
 const ChatItem = ({ name, message, timestamp, urls, sent }) => {
 
-    const imagePresent = (urls) ? true : false
 
     const style = {borderRadius: 16, padding:8, width:260, marginRight:16, marginLeft:16,backgroundColor: sent ? "#f7e1e1" : "#baf5d4", alignSelf: sent? 'end' : 'start'}
 
@@ -20,7 +19,10 @@ const ChatItem = ({ name, message, timestamp, urls, sent }) => {
                 {name}
             </PrimaryText>
 
-            {imagePresent && <img src={urls.replace(/['"]+/g, '')}  style={{height: 160, width:160, marginTop: 8, marginLeft: 8}} />}
+            {urls && urls.map((url) => {
+                console.log(url)
+                 return <img src={url.replace(/[\[\]']+/g, '')}  style={{height: 160, width:160, marginTop: 8, marginLeft: 8}}/> })
+                 }
 
             <PrimaryText size={15} style={{fontWeight: 'bold', flexGrow:1}}>
                 {message}
