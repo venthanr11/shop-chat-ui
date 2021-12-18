@@ -6,6 +6,9 @@ import ImageUpload from '../../components/ImageUpload/ImageUpload';
 import ChatItem from './ChatItem';
 import { PrimaryText } from '../../components/Typography';
 import { useParams } from 'react-router';
+import { getUserToken } from '../../utils/utility'
+import { postData } from '../../utils/api-helper'
+
 
  export default class Chat extends Component {
 
@@ -14,7 +17,8 @@ import { useParams } from 'react-router';
 
     this.state = {
       messages: [],
-      username: ''
+      username: '',
+      userId: getUserToken()
     };
 
     this.onAddMessage = this.onAddMessage.bind(this);
@@ -37,7 +41,7 @@ import { useParams } from 'react-router';
       let messages = [];
       if(messagesObj) {
         Object.keys(messagesObj).forEach(key =>  messages.push(messagesObj[key]));
-        messages = messages.map((message) => { return {text: message.messageText, user: message.senderName, id: message.key, timestamp : message.timestamp, urls : message.imageURLs}})
+        messages = messages.map((message) => { return {text: message.messageText, user: message.senderName, id: message.key, timestamp : message.timestamp, urls : message.imageURLs, senderId : message.senderId}})
         this.setState(prevState => ({
           messages: messages,
         }));
@@ -56,14 +60,35 @@ import { useParams } from 'react-router';
 
 
   pushMessage(textMessage, uris) {
-    const chatRef = ref(firebaseDatabase, 'messages/' + this.props.chatId);
-    push(chatRef,{messageText : textMessage, senderName: this.state.username, timestamp:  Date.now(), imageURLs : uris}, function(error) {
-      if (error) {
-        alert("Data could not be saved." + error);
-      } else {
-        alert("Data saved successfully.");
-      }
-    })
+    // const chatRef = ref(firebaseDatabase, 'messages/' + this.props.chatId);
+    // push(chatRef,{messageText : textMessage, senderName: this.state.username, timestamp:  Date.now(), imageURLs : uris}, function(error) {
+    //   if (error) {
+    //     alert("Data could not be saved." + error);
+    //   } else {
+    //     alert("Data saved successfully.");
+    //   }
+    // })
+
+    const payload = {
+      unique_customer_id: getUserToken(),
+      senderName: this.state.username,
+      sender_id : this.state.userId,
+      timestamp: Date.now(),
+      conversation_id: this.props.chatId,
+      message_text:textMessage,
+      image_urls:uris
+    }
+
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+
+    postData({ url: "/chat/v0/post_chat_message", payload }, config).then(
+      ({ data }) => {console.log("response" + data)}
+    ).catch(err => console.log(err))
+
   }
 
 onPhotoSelected(file) {
@@ -89,13 +114,13 @@ onPhotoSelected(file) {
       error => alert('An error occurred upload')
     )
     .then(res =>
-      this.onImageUploadSuccess(JSON.stringify(res.url)
+      this.onImageUploadSuccess(res.url
     )
     )
 }
 
 onImageUploadSuccess(uploadedUrl) {
-  this.pushMessage("",uploadedUrl)
+  this.pushMessage("",[uploadedUrl])
 }
 
 handleImageError = e => { 
@@ -104,7 +129,7 @@ handleImageError = e => {
 
 
   render() {
-    const username = this.state.username
+    const {userId} = this.state
   
     return (
       <FormLayout>
@@ -114,7 +139,7 @@ handleImageError = e => {
             {this.state.messages.map((message) => {
           
             return (
-                  <ChatItem  name= {message.user} message = {message.text} timestamp = {message.timestamp} urls = {message.urls} key={message.timestamp} sent = {username == message.user}/>
+                  <ChatItem  name= {message.user} message = {message.text} timestamp = {message.timestamp} urls = {message.urls} key={message.timestamp} sent = {userId == message.senderId}/>
                 )
             })}
         </div>
