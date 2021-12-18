@@ -129,9 +129,9 @@ const ChatsHome = () => {
       page_size: 50,
     }
     const intervalId = setInterval(() => {
-      postData({ url: "/chat/v0/customer_chat_groups" }, payload).then(
-        ({ data }) => setChatGroups(data)
-      ).catch(err => console.log(err))
+      postData({ url: "/chat/v0/customer_chat_groups", payload })
+        .then(({ data }) => setChatGroups(data))
+        .catch((err) => console.log(err))
     },5000)
     intervalRef.current = intervalId
   }, [])

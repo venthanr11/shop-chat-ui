@@ -1,5 +1,9 @@
 const DESIGNATIONS = [
   {
+    label: "Owner",
+    value: "owner",
+  },
+  {
     label: "Shop Manager",
     value: "shop_manager",
   },

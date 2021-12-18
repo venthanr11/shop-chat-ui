@@ -37,22 +37,6 @@ const FieldContainer = styled(Box)`
   width: 340px;
 `
 
-const categoryList = [
-  { label: "Books", value: "books" },
-  { label: "Toys", value: "toys" },
-  { label: "Men's Wear", value: "mens_wear" },
-  { label: "Women's Wear", value: "womens_wear" },
-  { label: "Furnitures", value: "furnitures" },
-]
-
-const regionList = [
-  { label: "Velachery", value: "velachery" },
-  { label: "Adyar", value: "adyar" },
-  { label: "Thiruvanmiyur", value: "thiruvanmiyur" },
-  { label: "Adambakkam", value: "adambakkam" },
-  { label: "Perungudi", value: "perungudi" },
-]
-
 const CategoryDropdowns = () => {
   const [departments, setDepartments] = useState([])
   const [categories, setCategories] = useState([])
@@ -78,9 +62,16 @@ const CategoryDropdowns = () => {
       department_ids: [...selectedDepartments],
     }
     postData({ url: "/category/v0/department/", payload })
-      .then(({ data }) =>
-        setCategories(data.map(({ id, name }) => ({ label: name, value: id })))
-      )
+      .then(({ data }) => {
+        let parsedCategories = []
+        data.forEach(({ categories }) => {
+          parsedCategories = categories.map(({ name, id }) => ({
+            label: name,
+            value: id,
+          }))
+        })
+        setCategories(parsedCategories)
+      })
       .catch((error) => console.log(error))
   }, [selectedDepartments])
 
@@ -93,11 +84,17 @@ const CategoryDropdowns = () => {
       category_ids: [...selectedCategories],
     }
     postData({ url: "/product_category/v0/category", payload })
-      .then(({ data }) =>
-        setProductCategories(
-          data.map(({ id, name }) => ({ label: name, value: id }))
-        )
-      )
+      .then(({ data }) => {
+
+        let parsedProductCategories = []
+        data.forEach(({ product_categories }) => {
+          parsedProductCategories = product_categories.map(({ name, id }) => ({
+            label: name,
+            value: id,
+          }))
+        })
+        setProductCategories(parsedProductCategories)
+      })
       .catch((error) => console.log(error))
   }, [selectedCategories])
 
@@ -143,7 +140,14 @@ const CategoryDropdowns = () => {
 
 const QueryForm = () => {
   const [images, setImages] = useState([])
+  const [regionsList, setRegionsList] = useState([])
   const navigate = useNavigate()
+
+  useEffect(() => {
+    getData({ url: "/region/v0/all" }).then(({data}) => {
+      setRegionsList(data.map(region => ({label: region, value: region})))
+    }).catch(e => console.log(e))
+  }, [])
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
@@ -181,10 +185,10 @@ const QueryForm = () => {
       const payload = {
         title: data.title,
         description: data.description,
-        regions: data.regions,
-        unique_client_id: userToken,
-        categories: data.categories,
-        query_images: data.query_images,
+        regions: data.regions.map(({ label }) => label),
+        unique_customer_id: userToken,
+        categories: data.categories.map(({ value }) => value),
+        query_images: data.query_images
       }
 
       const formData = new FormData()
@@ -196,10 +200,10 @@ const QueryForm = () => {
           "Content-Type": "multipart/form-data",
         },
       }
-      postData({ url: "/qi/v0/post_query", formData }, config)
+      postData({ url: "/qi/v0/post_query", payload: formData }, config)
         .then(({ data: { filteredResourceCount } }) => {
           actions.setSubmitting(false)
-          navigate("contacting-stores")
+          navigate("/users/contacting-stores")
         })
         .catch((err) => console.log(err))
     })
@@ -257,7 +261,7 @@ const QueryForm = () => {
                   name="regions"
                   placeholder="Choose your area"
                   label="Choose your area"
-                  items={regionList}
+                  items={regionsList}
                   isRequired
                 />
               </FieldContainer>

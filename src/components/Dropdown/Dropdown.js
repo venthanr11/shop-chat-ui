@@ -91,6 +91,11 @@ const ErrorContainer = styled(Box)`
   font-size: 12px;
 `
 
+const ItemContainer = styled(Box)`
+  max-height: 220px;
+  overflow: auto;
+`
+
 const Dropdown = ({
   name,
   placeholder,
@@ -225,7 +230,7 @@ const Dropdown = ({
                       }
                     />
                   </Box>
-                  <label for={name}>
+                  <label htmlFor={name}>
                     <Box className="cursor-pointer">
                       <img
                         src="/assets/images/search.svg"
@@ -236,36 +241,38 @@ const Dropdown = ({
                   </label>
                 </Flex>
               </StyledInputContainer>
-              {filteredItems.length === 0 ? (
-                <Flex justifyContent="center" alignItems="center" p={2}>
-                  <Box mt="6px">
-                    <img
-                      src="/assets/images/not-found.svg"
-                      width={18}
-                      alt="no items found"
-                    />
-                  </Box>
-                  <Box mt={1} ml={2}>
-                    <PrimaryText size={12} weight={600}>
-                      {noItemsMessage}
-                    </PrimaryText>
-                  </Box>
-                </Flex>
-              ) : (
-                filteredItems.map((item, index) => (
-                  <StyledItem
-                    isHighlighted={highlightedIndex === index}
-                    isSelected={!!selectedItems[item.value]}
-                    {...getItemProps({
-                      key: item.value,
-                      index,
-                      item,
-                    })}
-                  >
-                    {item.label}
-                  </StyledItem>
-                ))
-              )}
+              <ItemContainer>
+                {filteredItems.length === 0 ? (
+                  <Flex justifyContent="center" alignItems="center" p={2}>
+                    <Box mt="6px">
+                      <img
+                        src="/assets/images/not-found.svg"
+                        width={18}
+                        alt="no items found"
+                      />
+                    </Box>
+                    <Box mt={1} ml={2}>
+                      <PrimaryText size={12} weight={600}>
+                        {noItemsMessage}
+                      </PrimaryText>
+                    </Box>
+                  </Flex>
+                ) : (
+                  filteredItems.map((item, index) => (
+                    <StyledItem
+                      isHighlighted={highlightedIndex === index}
+                      isSelected={!!selectedItems[item.value]}
+                      {...getItemProps({
+                        key: item.value,
+                        index,
+                        item,
+                      })}
+                    >
+                      {item.label}
+                    </StyledItem>
+                  ))
+                )}
+              </ItemContainer>
             </MenuContainer>
           ) : (
             !!errors[name] && (

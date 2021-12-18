@@ -207,6 +207,7 @@ const StoreContactInfo = ({ storeInfo, onPrevious, onNext }) => {
               placeholder="Mobile Number"
               label="Mobile Number"
               isRequired
+              maxlength={10}
             />
           </Box>
           <Box mt={3}>
@@ -252,9 +253,16 @@ const StoreProductInfo = ({ storeInfo, onPrevious, onNext }) => {
       department_ids: [...selectedDepartments],
     }
     postData({ url: "/category/v0/department/", payload })
-      .then(({ data }) =>
-        setCategories(data.map(({ id, name }) => ({ label: name, value: id })))
-      )
+      .then(({ data }) => {
+        let parsedCategories = []
+        data.forEach(({ categories }) => {
+          parsedCategories = categories.map(({ name, id }) => ({
+            label: name,
+            value: id,
+          }))
+        })
+        setCategories(parsedCategories)
+      })
       .catch((error) => console.log(error))
   }, [selectedDepartments])
 
@@ -267,11 +275,16 @@ const StoreProductInfo = ({ storeInfo, onPrevious, onNext }) => {
       category_ids: [...selectedCategories],
     }
     postData({ url: "/product_category/v0/category", payload })
-      .then(({ data }) =>
-        setProductCategories(
-          data.map(({ id, name }) => ({ label: name, value: id }))
-        )
-      )
+      .then(({ data }) => {
+        let parsedProductCategories = []
+        data.forEach(({ product_categories }) => {
+          parsedProductCategories = product_categories.map(({ name, id }) => ({
+            label: name,
+            value: id,
+          }))
+        })
+        setProductCategories(parsedProductCategories)
+      })
       .catch((error) => console.log(error))
   }, [selectedCategories])
 
@@ -282,7 +295,7 @@ const StoreProductInfo = ({ storeInfo, onPrevious, onNext }) => {
   const postProductCategories = (data, actions) => {
     const payload = {
       resource_id: storeInfo.id,
-      sub_category_ids: data.sub_category_ids.map(
+      product_category_ids: data.sub_category_ids.map(
         (subCategoryId) => subCategoryId.value
       ),
     }
