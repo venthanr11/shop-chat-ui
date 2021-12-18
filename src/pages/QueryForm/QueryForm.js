@@ -12,7 +12,7 @@ import FormLabel from "../../components/FormLabel/FormLabel"
 import FormSubmit from "../../components/FormSubmit"
 import { FormLayout } from "../../components/Layouts"
 import { getData, postData } from "../../utils/api-helper"
-import { getUserToken, setUserName, setUserToken, uuid } from "../../utils/utility"
+import { getUserName, getUserToken, setUserName, setUserToken, uuid } from "../../utils/utility"
 
 const QueryHeading = styled("p")`
   font-weight: 700;
@@ -219,7 +219,7 @@ const QueryForm = () => {
         </Box>
         <Formik
           initialValues={{
-            name: "",
+            name: getUserName() || "",
             title: "",
             description: "",
             regions: [],
