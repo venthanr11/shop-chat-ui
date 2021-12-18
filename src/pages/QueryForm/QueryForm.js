@@ -165,6 +165,7 @@ const QueryForm = () => {
       let userToken = getUserToken()
       if (!!userToken) {
         resolve(userToken)
+        return
       }
       const payload = {
         unique_client_id: uuid(),
