@@ -25,7 +25,6 @@ export default class Chat extends Component {
     }
 
     this.isCustomer = this.state.userId != undefined
-    console.log(this.isCustomer)
 
     this.onAddMessage = this.onAddMessage.bind(this)
     this.onPhotoSelected = this.onPhotoSelected.bind(this)
@@ -53,7 +52,7 @@ export default class Chat extends Component {
             id: message.key,
             timestamp: message.timestamp,
             urls: message.imageURLs,
-            senderId: message.senderId,
+            senderId: message.sender_unique_id,
           }
         })
         this.setState((prevState) => ({
@@ -81,9 +80,8 @@ export default class Chat extends Component {
     // })
 
     const payload = {
-      unique_customer_id: getUserToken(),
       sender_name: this.state.username,
-      sender_id: this.isCustomer ? this.state.userId : this.state.customerId,
+      sender_unique_id: this.state.userId ? this.state.userId : this.state.customerId,
       timestamp: Date.now(),
       conversation_id: this.props.chatId,
       message_text: textMessage,
