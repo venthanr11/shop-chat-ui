@@ -135,7 +135,7 @@ handleImageError = e => {
       <FormLayout>
       <div style={{flex: 1, display: 'flex', margin:0, justifyContent:'center', flexDirection : "column",  backgroundColor:"#f2f7f5"}}>
         <div style={{overflowY: 'scroll', height:700, scrollBehavior:'smooth'}} >
-            <PrimaryText size={20} style={{paddingTop:16, paddingBottom: 16,marginBottom:16, fontWeight: 'bold',  backgroundColor: '#FFFFFF'}}>Chat with Crossword</PrimaryText>
+            <PrimaryText size={20} style={{paddingTop:16, paddingBottom: 16,marginBottom:16, fontWeight: 'bold',  backgroundColor: '#FFFFFF'}}>Direct Chat</PrimaryText>
             {this.state.messages.map((message) => {
           
             return (
