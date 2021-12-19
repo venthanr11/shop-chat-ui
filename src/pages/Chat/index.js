@@ -32,6 +32,8 @@ export default class Chat extends Component {
     this.pushMessage = this.pushMessage.bind(this)
     this.handleImageError = this.handleImageError.bind(this)
     this.scrollToBottom = this.scrollToBottom.bind(this)
+
+    console.log("user " + this.state.userId + " customer " + this.state.customerId)
   }
 
   componentWillMount() {
@@ -52,7 +54,7 @@ export default class Chat extends Component {
             id: message.key,
             timestamp: message.timestamp,
             urls: message.imageURLs,
-            senderId: message.sender_unique_id,
+            senderId: message.senderUniqueId,
           }
         })
         this.setState((prevState) => ({
@@ -136,6 +138,7 @@ export default class Chat extends Component {
 
   render() {
     const selfId = this.state.userId ? this.state.userId : this.state.customerId;
+    console.log("self id " + selfId)
 
     return (
       <FormLayout>
