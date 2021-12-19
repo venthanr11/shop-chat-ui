@@ -169,7 +169,7 @@ export default class Chat extends Component {
                 backgroundColor: "#FFFFFF",
               }}
             >
-              Direct Chat
+              {this.getTitleHeading()}
             </PrimaryText>
             {this.state.messages.map((message) => {
               return (
@@ -223,6 +223,17 @@ export default class Chat extends Component {
         </div>
       </FormLayout>
     )
+  }
+
+  getTitleHeading() {
+    const {userId,customerId} = this.state
+    if (customerId) {
+      return "Chat with Customer"
+    } else if (userId) {
+      return "Chat with Shop"
+    } else {
+      return "DIrect Chat"
+    }
   }
 
   scrollToBottom = () => {
