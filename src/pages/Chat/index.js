@@ -5,14 +5,20 @@ import { FormLayout } from "../../components/Layouts"
 import ImageUpload from "../../components/ImageUpload/ImageUpload"
 import ChatItem from "./ChatItem"
 import { PrimaryText } from "../../components/Typography"
-import { useParams } from "react-router"
-import { getCustomerToken, getUserName, getUserToken } from "../../utils/utility"
-import { postData } from "../../utils/api-helper"
+import { useNavigate, useParams } from "react-router"
+import {
+  getCustomerToken,
+  getUserName,
+  getUserToken,
+} from "../../utils/utility"
+import { getData, postData } from "../../utils/api-helper"
+import { Flex } from "reflexbox"
+import backButton from './../../assets/chevronLeft.svg'
+import homeButton from './../../assets/home.svg'
 
 export default class Chat extends Component {
+  isCustomer = false
 
-  isCustomer = false;
-  
   constructor() {
     super()
 
@@ -20,8 +26,8 @@ export default class Chat extends Component {
       messages: [],
       username: getUserName(),
       userId: getUserToken(),
-      customerId: getCustomerToken()
-  
+      customerId: getCustomerToken(),
+      storeName : ""
     }
 
     this.isCustomer = this.state.userId != undefined
@@ -33,21 +39,26 @@ export default class Chat extends Component {
     this.handleImageError = this.handleImageError.bind(this)
     this.scrollToBottom = this.scrollToBottom.bind(this)
 
-    console.log("user " + this.state.userId + " customer " + this.state.customerId)
+    console.log(
+      "user " + this.state.userId + " customer " + this.state.customerId
+    )
   }
 
   componentWillMount() {
-
     const chatRef = ref(firebaseDatabase, "messages/" + this.props.chatId)
 
     onValue(chatRef, (snapshot) => {
       let messagesObj = snapshot.val()
       let messages = []
+      let storeName = ""
       if (messagesObj) {
         Object.keys(messagesObj).forEach((key) =>
           messages.push(messagesObj[key])
         )
         messages = messages.map((message) => {
+          if (storeName === "") {
+            storeName = message.senderName
+          }
           return {
             text: message.messageText,
             user: message.senderName,
@@ -59,6 +70,7 @@ export default class Chat extends Component {
         })
         this.setState((prevState) => ({
           messages: messages,
+          storeName: storeName
         }))
       }
     })
@@ -83,12 +95,14 @@ export default class Chat extends Component {
 
     const payload = {
       sender_name: this.state.username,
-      sender_unique_id: this.state.userId ? this.state.userId : this.state.customerId,
+      sender_unique_id: this.state.userId
+        ? this.state.userId
+        : this.state.customerId,
       timestamp: Date.now(),
       conversation_id: this.props.chatId,
       message_text: textMessage,
       image_urls: uris,
-      sender_type: this.isCustomer ? "CUSTOMER" : "RESOURCE"
+      sender_type: this.isCustomer ? "CUSTOMER" : "RESOURCE",
     }
 
     const config = {
@@ -137,7 +151,7 @@ export default class Chat extends Component {
   }
 
   render() {
-    const selfId = this.state.userId ? this.state.userId : this.state.customerId;
+    const selfId = this.state.userId ? this.state.userId : this.state.customerId
     console.log("self id " + selfId)
 
     return (
@@ -149,7 +163,7 @@ export default class Chat extends Component {
             margin: 0,
             justifyContent: "center",
             flexDirection: "column",
-            backgroundColor: "#f2f7f5",
+            backgroundColor: "#ffffff",
           }}
         >
           <div
@@ -159,18 +173,7 @@ export default class Chat extends Component {
               scrollBehavior: "smooth",
             }}
           >
-            <PrimaryText
-              size={20}
-              style={{
-                paddingTop: 16,
-                paddingBottom: 16,
-                marginBottom: 16,
-                fontWeight: "bold",
-                backgroundColor: "#FFFFFF",
-              }}
-            >
-              {this.getTitleHeading()}
-            </PrimaryText>
+           {this.getTitleHeadingView()}
             {this.state.messages.map((message) => {
               return (
                 <ChatItem
@@ -226,14 +229,44 @@ export default class Chat extends Component {
   }
 
   getTitleHeading() {
-    const {userId,customerId} = this.state
+    const { userId, customerId, storeName } = this.state
     if (customerId) {
       return "Chat with Customer"
     } else if (userId) {
-      return "Chat with Shop"
+      return storeName == "" ? "Chat with Shop" : storeName
     } else {
       return "DIrect Chat"
     }
+  }
+
+  getTitleHeadingView() {
+    return (
+      <Flex width={1} flexDirection="row" backgroundColor= "#edeff2" alignItems="center" justifyContent="space-between" marginBottom={16}>      
+        <img src={backButton} alt="backButton" style={{marginLeft : 16, marginRight:16, padding:0, height:40, width:32}} onClick={this.onBackPress} />
+        <PrimaryText
+          size={20}
+          style={{
+            paddingTop: 16,
+            paddingBottom: 16,
+            marginBottom: 16,
+            fontWeight: "bold",
+            color:"#000000"
+          }}
+        >
+          {this.getTitleHeading()}
+          </PrimaryText>
+          <img src={homeButton} alt="homeButton" style={{marginLeft : 16, marginRight:16, padding:0, height:40, width:32}} onClick={this.isCustomer ? this.onHomePress : this.onBackPress} />
+
+      </Flex>
+    )
+  }
+
+  onBackPress = () => {
+    this.props.navigate("/chats")
+  }
+
+  onHomePress = () => {
+    this.props.navigate("/")
   }
 
   scrollToBottom = () => {
@@ -251,5 +284,6 @@ export default class Chat extends Component {
 
 export const WrappedComponent = (props) => {
   const { chatId } = useParams()
-  return <Chat chatId={chatId} />
+  const navigate = useNavigate()
+  return <Chat chatId={chatId} navigate={(s) => navigate(s)}/>
 }
