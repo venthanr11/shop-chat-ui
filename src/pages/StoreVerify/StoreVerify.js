@@ -58,7 +58,7 @@ const StoreVerify = () => {
       url: `/resource/v0/resource_profile/${storeIdentifier}`,
     })
       .then(({ data }) => {
-        setCustomerToken(data.id)
+        setCustomerToken(data.uniqueIdentifier)
         setStoreInfo(data)
       })
       .catch((err) => console.log(err))
