@@ -16,15 +16,11 @@ const ChatItem = ({ name, message, timestamp, urls, sent }) => {
         
         <Flex width={1} flexDirection="column" marginBottom= {2} >
             <Box style={style}>
-            <PrimaryText size={10} style={{color:textColor, marginLeft: 12}}>
-                {name}
-            </PrimaryText>
-
             {urls && urls.map((url) => {
-                 return <img src={url.replace(/[\[\]']+/g, '')}  style={{alignSelf: 'baseline', maxWidth:220, marginTop: 8, marginLeft: 16}}/> })
+                 return <img src={url.replace(/[\[\]']+/g, '')}  style={{alignSelf: 'baseline', maxWidth:220, marginTop: 12, marginLeft: 16}}/> })
                  }
 
-            <PrimaryText size={16} style={{ flexGrow:1, color:textColor, marginLeft: 12}}>
+            <PrimaryText size={16} style={{ flexGrow:1, color:textColor, marginLeft: 12, marginTop:4}}>
                 {message}
             </PrimaryText>
 

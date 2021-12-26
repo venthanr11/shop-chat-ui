@@ -13,8 +13,6 @@ import {
 } from "../../utils/utility"
 import { getData, postData } from "../../utils/api-helper"
 import { Flex } from "reflexbox"
-import backButton from './../../assets/chevronLeft.svg'
-import homeButton from './../../assets/home.svg'
 
 export default class Chat extends Component {
   isCustomer = false
@@ -166,6 +164,7 @@ export default class Chat extends Component {
             backgroundColor: "#ffffff",
           }}
         >
+           {this.getTitleHeadingView()}
           <div
             style={{
               overflowY: "scroll",
@@ -173,7 +172,6 @@ export default class Chat extends Component {
               scrollBehavior: "smooth",
             }}
           >
-           {this.getTitleHeadingView()}
             {this.state.messages.map((message) => {
               return (
                 <ChatItem
@@ -242,7 +240,7 @@ export default class Chat extends Component {
   getTitleHeadingView() {
     return (
       <Flex width={1} flexDirection="row" backgroundColor= "#edeff2" alignItems="center" justifyContent="space-between" marginBottom={16}>      
-        <img src={backButton} alt="backButton" style={{marginLeft : 16, marginRight:16, padding:0, height:40, width:32}} onClick={this.onBackPress} />
+        <img src={'/assets/images/chevronLeft.svg'} alt="backButton" style={{marginLeft : 16, marginRight:16, padding:0, height:40, width:32}} onClick={this.onBackPress} />
         <PrimaryText
           size={20}
           style={{
@@ -255,7 +253,7 @@ export default class Chat extends Component {
         >
           {this.getTitleHeading()}
           </PrimaryText>
-          <img src={homeButton} alt="homeButton" style={{marginLeft : 16, marginRight:16, padding:0, height:40, width:32}} onClick={this.isCustomer ? this.onHomePress : this.onBackPress} />
+          <img src={'/assets/images/home.svg'} alt="homeButton" style={{marginLeft : 16, marginRight:16, padding:0, height:40, width:32}} onClick={this.isCustomer ? this.onHomePress : this.onBackPress} />
 
       </Flex>
     )
