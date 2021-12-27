@@ -7,14 +7,13 @@ import ChatItem from "./ChatItem"
 import { PrimaryText } from "../../components/Typography"
 import { useNavigate, useParams } from "react-router"
 import {
-  getCustomerToken,
   getUserName,
-  getUserToken,
 } from "../../utils/utility"
 import { getData, postData } from "../../utils/api-helper"
 import { Flex } from "reflexbox"
 
 export default class Chat extends Component {
+
   isCustomer = false
 
   constructor() {
@@ -23,12 +22,9 @@ export default class Chat extends Component {
     this.state = {
       messages: [],
       username: getUserName(),
-      userId: getUserToken(),
-      customerId: getCustomerToken(),
-      storeName : ""
+      senderName : "",
+      senderThumbnail : ""
     }
-
-    this.isCustomer = this.state.userId != undefined
 
     this.onAddMessage = this.onAddMessage.bind(this)
     this.onPhotoSelected = this.onPhotoSelected.bind(this)
@@ -36,26 +32,34 @@ export default class Chat extends Component {
     this.pushMessage = this.pushMessage.bind(this)
     this.handleImageError = this.handleImageError.bind(this)
     this.scrollToBottom = this.scrollToBottom.bind(this)
+    this.getShopDetails = this.getShopDetails.bind(this)
+    this.getCustomerDetails = this.getCustomerDetails.bind(this)
+    this.getSenderId = this.getSenderId.bind(this)
 
-    console.log(
-      "user " + this.state.userId + " customer " + this.state.customerId
-    )
   }
 
   componentWillMount() {
+
     const chatRef = ref(firebaseDatabase, "messages/" + this.props.chatId)
+    const selfUUID = this.getSenderId()
+
+    if (this.props.shopId) {
+      this.isCustomer = false 
+    } else if (this.props.customerId) {
+      this.isCustomer = true 
+    }
 
     onValue(chatRef, (snapshot) => {
       let messagesObj = snapshot.val()
       let messages = []
-      let storeName = ""
+      let userIdSender = ""
       if (messagesObj) {
         Object.keys(messagesObj).forEach((key) =>
           messages.push(messagesObj[key])
         )
         messages = messages.map((message) => {
-          if (storeName === "") {
-            storeName = message.senderName
+          if (message.senderUniqueId != selfUUID) {
+            userIdSender = message.senderUniqueId
           }
           return {
             text: message.messageText,
@@ -68,10 +72,18 @@ export default class Chat extends Component {
         })
         this.setState((prevState) => ({
           messages: messages,
-          storeName: storeName
         }))
+        if (userIdSender && userIdSender != "") {
+          if (this.isCustomer) {
+             this.getShopDetails(userIdSender)
+          } else {
+            this.getCustomerDetails(userIdSender)
+          }
+        }
       }
     })
+
+
   }
 
   onAddMessage(event) {
@@ -82,20 +94,9 @@ export default class Chat extends Component {
   }
 
   pushMessage(textMessage, uris) {
-    // const chatRef = ref(firebaseDatabase, 'messages/' + this.props.chatId);
-    // push(chatRef,{messageText : textMessage, senderName: this.state.username, timestamp:  Date.now(), imageURLs : uris}, function(error) {
-    //   if (error) {
-    //     alert("Data could not be saved." + error);
-    //   } else {
-    //     alert("Data saved successfully.");
-    //   }
-    // })
-
     const payload = {
       sender_name: this.state.username,
-      sender_unique_id: this.state.userId
-        ? this.state.userId
-        : this.state.customerId,
+      sender_unique_id: this.getSenderId(),
       timestamp: Date.now(),
       conversation_id: this.props.chatId,
       message_text: textMessage,
@@ -112,6 +113,34 @@ export default class Chat extends Component {
     postData({ url: "/chat/v0/post_chat_message", payload }, config)
       .then(({ data }) => {
         console.log("response" + data)
+      })
+      .catch((err) => console.log(err))
+  }
+
+  getCustomerDetails(uuid) {
+      getData({
+        url: `/customer/v0/${uuid}`,
+      })
+        .then(({ data }) => {
+          this.setState((prevState) => ({
+            senderName: data.name
+          }))
+        })
+        .catch((err) => console.log(err))
+  }
+
+  getShopDetails(uuid) {
+    getData({
+      url: `/resource/v0/resource_profile/${uuid}`,
+    })
+      .then(({ data }) => {
+        if (data.resource) {
+          this.setState((prevState) => ({
+            senderName: data.resource.name,
+            senderThumbnail : data.resource.imgUrl  
+            // || "https://www.onlinelogomaker.com/blog/wp-content/uploads/2017/06/shopping-online.jpg"
+          }))
+        }
       })
       .catch((err) => console.log(err))
   }
@@ -148,9 +177,12 @@ export default class Chat extends Component {
     console.log(e)
   }
 
+  getSenderId() {
+    return this.props.customerId ? this.props.customerId : this.props.shopId
+  }
+
   render() {
-    const selfId = this.state.userId ? this.state.userId : this.state.customerId
-    console.log("self id " + selfId)
+    const selfId = this.getSenderId()
 
     return (
       <FormLayout>
@@ -227,32 +259,31 @@ export default class Chat extends Component {
   }
 
   getTitleHeading() {
-    const { userId, customerId, storeName } = this.state
-    if (customerId) {
-      return "Chat with Customer"
-    } else if (userId) {
-      return storeName == "" ? "Chat with Shop" : storeName
-    } else {
+    const {senderName } = this.state
+    if (senderName) {
+      return  senderName
+    }else {
       return "DIrect Chat"
     }
   }
 
   getTitleHeadingView() {
+    const {senderThumbnail} = this.state
     return (
       <Flex width={1} flexDirection="row" backgroundColor= "#edeff2" alignItems="center" justifyContent="space-between" marginBottom={16}>      
         <img src={'/assets/images/chevronLeft.svg'} alt="backButton" style={{marginLeft : 16, marginRight:16, padding:0, height:40, width:32}} onClick={this.onBackPress} />
+        <Flex style={{flex:1, flexDirection:"row", alignItems:"center", paddingTop:20,paddingBottom:20, markerStart:16, justifyContent:"start"}}>
+        {senderThumbnail && <img src={senderThumbnail}  style={{ height:40, width:40, alignSelf:"center", marginRight:8}}/>}
         <PrimaryText
-          size={20}
+          size={16}
           style={{
-            paddingTop: 16,
-            paddingBottom: 16,
-            marginBottom: 16,
             fontWeight: "bold",
             color:"#000000"
           }}
         >
           {this.getTitleHeading()}
           </PrimaryText>
+          </Flex>
           <img src={'/assets/images/home.svg'} alt="homeButton" style={{marginLeft : 16, marginRight:16, padding:0, height:40, width:32}} onClick={this.isCustomer ? this.onHomePress : this.onBackPress} />
 
       </Flex>
@@ -281,7 +312,7 @@ export default class Chat extends Component {
 }
 
 export const WrappedComponent = (props) => {
-  const { chatId } = useParams()
+  const { chatId,shopId,customerId } = useParams()
   const navigate = useNavigate()
-  return <Chat chatId={chatId} navigate={(s) => navigate(s)}/>
+  return <Chat chatId={chatId} shopId={shopId} customerId={customerId} navigate={(s) => navigate(s)}/>
 }

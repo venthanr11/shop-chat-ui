@@ -63,6 +63,7 @@ const EmptyState = () => {
 
 const ChatGroup = ({chatGroup}) => {
   const navigate = useNavigate();
+  const userId = getUserToken()
   return (
     <Flex p={2} flexDirection="column" m={2}>
       <Flex alignItems="center">
@@ -91,7 +92,7 @@ const ChatGroup = ({chatGroup}) => {
             p={2}
             alignItems="center"
             width={1}
-            onClick={() => navigate(`/chat/${chat.conversation_id}`)}
+            onClick={() => navigate(`/chat/${chat.conversation_id}/customer/${userId}`)}
           >
             <Box>
               <ChatImage src={chat.resource_image_url} />
