@@ -25,10 +25,9 @@ export default class Chat extends Component {
       username: getUserName(),
       userId: getUserToken(),
       customerId: getCustomerToken(),
-      storeName : ""
+      senderName : "",
+      senderThumbnail : ""
     }
-
-    this.isCustomer = this.state.userId != undefined
 
     this.onAddMessage = this.onAddMessage.bind(this)
     this.onPhotoSelected = this.onPhotoSelected.bind(this)
@@ -37,12 +36,10 @@ export default class Chat extends Component {
     this.handleImageError = this.handleImageError.bind(this)
     this.scrollToBottom = this.scrollToBottom.bind(this)
 
-    console.log(
-      "user " + this.state.userId + " customer " + this.state.customerId
-    )
   }
 
   componentWillMount() {
+
     const chatRef = ref(firebaseDatabase, "messages/" + this.props.chatId)
 
     onValue(chatRef, (snapshot) => {
@@ -54,9 +51,6 @@ export default class Chat extends Component {
           messages.push(messagesObj[key])
         )
         messages = messages.map((message) => {
-          if (storeName === "") {
-            storeName = message.senderName
-          }
           return {
             text: message.messageText,
             user: message.senderName,
@@ -67,11 +61,18 @@ export default class Chat extends Component {
           }
         })
         this.setState((prevState) => ({
-          messages: messages,
-          storeName: storeName
+          messages: messages
         }))
       }
     })
+
+    if (this.props.shopId) {
+      this.isCustomer = false 
+      this.getShopDetails(this.props.shopId)
+    } else if (this.props.customerId) {
+      this.isCustomer = true 
+      this.getCustomerDetails(this.props.customerId)
+    }
   }
 
   onAddMessage(event) {
@@ -112,6 +113,31 @@ export default class Chat extends Component {
     postData({ url: "/chat/v0/post_chat_message", payload }, config)
       .then(({ data }) => {
         console.log("response" + data)
+      })
+      .catch((err) => console.log(err))
+  }
+
+  getCustomerDetails(uuid) {
+      getData({
+        url: `/customer/v0/${uuid}`,
+      })
+        .then(({ data }) => {
+          this.setState((prevState) => ({
+            senderName: data.name
+          }))
+        })
+        .catch((err) => console.log(err))
+  }
+
+  getShopDetails(uuid) {
+    getData({
+      url: `/resource/v0/resource_profile/${uuid}`,
+    })
+      .then(({ data }) => {
+        this.setState((prevState) => ({
+          senderName: data.resource.name,
+          senderThumbnail : data.resource.imgUrl
+        }))
       })
       .catch((err) => console.log(err))
   }
@@ -227,12 +253,10 @@ export default class Chat extends Component {
   }
 
   getTitleHeading() {
-    const { userId, customerId, storeName } = this.state
-    if (customerId) {
-      return "Chat with Customer"
-    } else if (userId) {
-      return storeName == "" ? "Chat with Shop" : storeName
-    } else {
+    const {senderName } = this.state
+    if (senderName) {
+      return "Chat with " + senderName
+    }else {
       return "DIrect Chat"
     }
   }
@@ -242,9 +266,9 @@ export default class Chat extends Component {
       <Flex width={1} flexDirection="row" backgroundColor= "#edeff2" alignItems="center" justifyContent="space-between" marginBottom={16}>      
         <img src={'/assets/images/chevronLeft.svg'} alt="backButton" style={{marginLeft : 16, marginRight:16, padding:0, height:40, width:32}} onClick={this.onBackPress} />
         <PrimaryText
-          size={20}
+          size={16}
           style={{
-            paddingTop: 16,
+            paddingTop: 24,
             paddingBottom: 16,
             marginBottom: 16,
             fontWeight: "bold",
@@ -281,7 +305,7 @@ export default class Chat extends Component {
 }
 
 export const WrappedComponent = (props) => {
-  const { chatId } = useParams()
+  const { chatId,shopId,customerId } = useParams()
   const navigate = useNavigate()
-  return <Chat chatId={chatId} navigate={(s) => navigate(s)}/>
+  return <Chat chatId={chatId} shopId={shopId} customerId={customerId} navigate={(s) => navigate(s)}/>
 }
