@@ -15,6 +15,7 @@ import { getData, postData } from "../../utils/api-helper"
 import { Flex } from "reflexbox"
 
 export default class Chat extends Component {
+
   isCustomer = false
 
   constructor() {
@@ -23,8 +24,6 @@ export default class Chat extends Component {
     this.state = {
       messages: [],
       username: getUserName(),
-      userId: getUserToken(),
-      customerId: getCustomerToken(),
       senderName : "",
       senderThumbnail : ""
     }
@@ -35,22 +34,35 @@ export default class Chat extends Component {
     this.pushMessage = this.pushMessage.bind(this)
     this.handleImageError = this.handleImageError.bind(this)
     this.scrollToBottom = this.scrollToBottom.bind(this)
+    this.getShopDetails = this.getShopDetails.bind(this)
+    this.getCustomerDetails = this.getCustomerDetails.bind(this)
+    this.getSenderId = this.getSenderId.bind(this)
 
   }
 
   componentWillMount() {
 
     const chatRef = ref(firebaseDatabase, "messages/" + this.props.chatId)
+    const selfUUID = this.getSenderId()
+
+    if (this.props.shopId) {
+      this.isCustomer = false 
+    } else if (this.props.customerId) {
+      this.isCustomer = true 
+    }
 
     onValue(chatRef, (snapshot) => {
       let messagesObj = snapshot.val()
       let messages = []
-      let storeName = ""
+      let userIdSender = ""
       if (messagesObj) {
         Object.keys(messagesObj).forEach((key) =>
           messages.push(messagesObj[key])
         )
         messages = messages.map((message) => {
+          if (message.senderUniqueId != selfUUID) {
+            userIdSender = message.senderUniqueId
+          }
           return {
             text: message.messageText,
             user: message.senderName,
@@ -61,18 +73,19 @@ export default class Chat extends Component {
           }
         })
         this.setState((prevState) => ({
-          messages: messages
+          messages: messages,
         }))
+        if (userIdSender && userIdSender != "") {
+          if (this.isCustomer) {
+             this.getShopDetails(userIdSender)
+          } else {
+            this.getCustomerDetails(userIdSender)
+          }
+        }
       }
     })
 
-    if (this.props.shopId) {
-      this.isCustomer = false 
-      this.getShopDetails(this.props.shopId)
-    } else if (this.props.customerId) {
-      this.isCustomer = true 
-      this.getCustomerDetails(this.props.customerId)
-    }
+
   }
 
   onAddMessage(event) {
@@ -83,20 +96,9 @@ export default class Chat extends Component {
   }
 
   pushMessage(textMessage, uris) {
-    // const chatRef = ref(firebaseDatabase, 'messages/' + this.props.chatId);
-    // push(chatRef,{messageText : textMessage, senderName: this.state.username, timestamp:  Date.now(), imageURLs : uris}, function(error) {
-    //   if (error) {
-    //     alert("Data could not be saved." + error);
-    //   } else {
-    //     alert("Data saved successfully.");
-    //   }
-    // })
-
     const payload = {
       sender_name: this.state.username,
-      sender_unique_id: this.state.userId
-        ? this.state.userId
-        : this.state.customerId,
+      sender_unique_id: this.getSenderId(),
       timestamp: Date.now(),
       conversation_id: this.props.chatId,
       message_text: textMessage,
@@ -174,9 +176,12 @@ export default class Chat extends Component {
     console.log(e)
   }
 
+  getSenderId() {
+    return this.props.customerId ? this.props.customerId : this.props.shopId
+  }
+
   render() {
-    const selfId = this.state.userId ? this.state.userId : this.state.customerId
-    console.log("self id " + selfId)
+    const selfId = this.getSenderId()
 
     return (
       <FormLayout>
