@@ -7,9 +7,7 @@ import ChatItem from "./ChatItem"
 import { PrimaryText } from "../../components/Typography"
 import { useNavigate, useParams } from "react-router"
 import {
-  getCustomerToken,
   getUserName,
-  getUserToken,
 } from "../../utils/utility"
 import { getData, postData } from "../../utils/api-helper"
 import { Flex } from "reflexbox"
@@ -136,11 +134,13 @@ export default class Chat extends Component {
       url: `/resource/v0/resource_profile/${uuid}`,
     })
       .then(({ data }) => {
-        this.setState((prevState) => ({
-          senderName: data.resource.name,
-          senderThumbnail : data.resource.imgUrl  
-          // || "https://www.onlinelogomaker.com/blog/wp-content/uploads/2017/06/shopping-online.jpg"
-        }))
+        if (data.resource) {
+          this.setState((prevState) => ({
+            senderName: data.resource.name,
+            senderThumbnail : data.resource.imgUrl  
+            // || "https://www.onlinelogomaker.com/blog/wp-content/uploads/2017/06/shopping-online.jpg"
+          }))
+        }
       })
       .catch((err) => console.log(err))
   }
@@ -261,7 +261,7 @@ export default class Chat extends Component {
   getTitleHeading() {
     const {senderName } = this.state
     if (senderName) {
-      return "Chat with " + senderName
+      return  senderName
     }else {
       return "DIrect Chat"
     }
