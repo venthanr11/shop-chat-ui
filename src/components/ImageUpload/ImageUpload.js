@@ -10,7 +10,7 @@ const UploadContainer = styled("label")`
   width: 100%;
   height: 100%;
   cursor: pointer;
-  border-radius: 10px 10px 0 0;
+  border-radius: ${({ isRound }) => (isRound ? "50%" : "10px 10px 0 0")};
 
   input {
     width: 100%;
@@ -19,7 +19,7 @@ const UploadContainer = styled("label")`
   }
 
   img {
-    border-radius: 10px 10px 0 0;
+    border-radius: ${({ isRound }) => (isRound ? "50%" : "10px 10px 0 0")};
   }
 `
 
@@ -35,7 +35,7 @@ const EditOverlay = styled(Flex)`
   height: 100%;
   width: 100%;
   background: rgb(255, 255, 255, 0.6);
-  border-radius: 10px 10px 0 0;
+  border-radius: ${({ isRound }) => (isRound ? "50%" : "10px 10px 0 0")};
   z-index: 4;
 `
 
@@ -48,10 +48,10 @@ const CloseContainer = styled(Flex)`
   border-radius: 50%;
   background: #ffbdbd;
   padding: 10px;
-  z-index; 6;
+  z-index: 6;
 `
 
-function ImageUpload({ name, image, onLoad, isEdit }) {
+function ImageUpload({ name, image, onLoad, isEdit, isRound }) {
   const [showEdit, setShowEdit] = useState(false)
 
   useEffect(() => {
@@ -76,6 +76,7 @@ function ImageUpload({ name, image, onLoad, isEdit }) {
       width="100%"
       onMouseLeave={() => setShowEdit(false)}
       onMouseOver={() => setShowEdit(true)}
+      isRound={isRound}
     >
       <input id={name} type="file" onChange={loadImage} />
       <EditContainer />
@@ -86,6 +87,7 @@ function ImageUpload({ name, image, onLoad, isEdit }) {
               width="100%"
               alignItems="center"
               justifyContent="center"
+              isRound={isRound}
             >
               <img src="/assets/images/edit.svg" width={38} alt="edit image" />
             </EditOverlay>
@@ -94,7 +96,11 @@ function ImageUpload({ name, image, onLoad, isEdit }) {
             <CloseContainer
               alignItems="center"
               justifyContent="center"
-              onClick={() => onLoad("", null)}
+              onClick={(event) => {
+                event.stopPropagation()
+                event.preventDefault()
+                onLoad("", null)
+              }}
             >
               <img
                 src="/assets/images/close.svg"

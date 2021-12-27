@@ -12,7 +12,13 @@ import FormLabel from "../../components/FormLabel/FormLabel"
 import FormSubmit from "../../components/FormSubmit"
 import { FormLayout } from "../../components/Layouts"
 import { getData, postData } from "../../utils/api-helper"
-import { getUserName, getUserToken, setUserName, setUserToken, uuid } from "../../utils/utility"
+import {
+  getUserName,
+  getUserToken,
+  setUserName,
+  setUserToken,
+  uuid,
+} from "../../utils/utility"
 
 const QueryHeading = styled("p")`
   font-weight: 700;
@@ -85,7 +91,6 @@ const CategoryDropdowns = () => {
     }
     postData({ url: "/product_category/v0/category", payload })
       .then(({ data }) => {
-
         let parsedProductCategories = []
         data.forEach(({ product_categories }) => {
           parsedProductCategories = product_categories.map(({ name, id }) => ({
@@ -144,9 +149,11 @@ const QueryForm = () => {
   const navigate = useNavigate()
 
   useEffect(() => {
-    getData({ url: "/region/v0/all" }).then(({data}) => {
-      setRegionsList(data.map(region => ({label: region, value: region})))
-    }).catch(e => console.log(e))
+    getData({ url: "/region/v0/all" })
+      .then(({ data }) => {
+        setRegionsList(data.map((region) => ({ label: region, value: region })))
+      })
+      .catch((e) => console.log(e))
   }, [])
 
   const validationSchema = Yup.object().shape({
@@ -190,12 +197,14 @@ const QueryForm = () => {
         regions: data.regions.map(({ label }) => label),
         unique_customer_id: userToken,
         categories: data.categories.map(({ value }) => value),
-        query_images: data.query_images
       }
 
       const formData = new FormData()
       Object.keys(payload).forEach((payloadKey) => {
         formData.append(payloadKey, payload[payloadKey])
+      })
+      data.query_images.forEach((image) => {
+        formData.append("query_images", image)
       })
       const config = {
         headers: {
