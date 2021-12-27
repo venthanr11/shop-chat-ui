@@ -55,7 +55,7 @@ const StoreVerify = () => {
 
   useEffect(() => {
     getData({
-      url: `/resource/v0/resource_for_verification/${storeIdentifier}`,
+      url: `/resource/v0/resource_profile/${storeIdentifier}`,
     })
       .then(({ data }) => {
         setCustomerToken(data.uniqueIdentifier)
@@ -68,41 +68,9 @@ const StoreVerify = () => {
     return null
   }
   return (
-    <FormLayout autoWidth isStore>
+    <FormLayout isStore>
       <Flex justifyContent="space-evenly" width={1} flexWrap="wrap-reverse">
-        <Box>
-          <ShopchatInfo />
-        </Box>
         <VerificationContainer mx={3}>
-          <Stepper>
-            <Flex justifyContent="space-between" width="100%">
-              {[0, 0, 0].map((item, idx) => (
-                <Fragment>
-                  <StepContainer stepNum={idx}>
-                    <Step></Step>
-                  </StepContainer>
-                  {idx === wizardState && <Connector stepNum={idx} />}
-                </Fragment>
-              ))}
-            </Flex>
-          </Stepper>
-          <Flex alignItems="center">
-            <Box>
-              <img
-                src="/assets/images/verified.svg"
-                width={32}
-                alt="verify your store"
-              />
-            </Box>
-            <Box ml={3}>
-              <h2>Verify your shop</h2>
-            </Box>
-          </Flex>
-          <Box my={2}>
-            <PrimaryText>
-              Update store information to receive direct messages from customers
-            </PrimaryText>
-          </Box>
           <Box>
             <StoreCard
               wizardState={wizardState}

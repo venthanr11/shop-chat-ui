@@ -3,6 +3,13 @@ import React from "react"
 import { Flex, Box } from "reflexbox"
 import { BlockText, PrimaryText } from "../Typography"
 
+const ShopchatHeader = styled(Flex)`
+  background: #ffffff;
+  -webkit-box-shadow: 3px 3px 9px -8px rgb(0 0 0 / 50%);
+  -moz-box-shadow: 3px 3px 9px -8px rgba(0, 0, 0, 0.5);
+  box-shadow: 3px 3px 9px -8px rgb(0 0 0 / 50%);
+`
+
 const Container = styled(Flex)`
   max-width: 90%;
   width: ${({ autoWidth }) => (autoWidth ? "fit-content" : "455px")};
@@ -35,66 +42,75 @@ const messages = {
 }
 
 const FormLayout = ({ autoWidth, isStore, children }) => {
-  const messageKey = isStore ? 'store' : 'customer'
+  const messageKey = isStore ? "store" : "customer"
   return (
-    <Container
-      autoWidth={autoWidth}
-      mx="auto"
-      my={4}
-      flexDirection="column"
-      justifyContent="center"
-    >
+    <Flex flexDirection="column" justifyContent="center">
       <Box>
-        <Flex justifyContent="center" alignItems="center">
+        <ShopchatHeader alignItems="center" px={3} py={2}>
           <Box>
-            <img src="/assets/images/shopchat-logo.png" />
+            <img
+              src="/assets/images/shopchat-logo.png"
+              alt="shopchat"
+              width="40px"
+            />
           </Box>
           <Box ml={2}>
             <PrimaryText size={22} weight={600} type="brand">
               Shopchat
             </PrimaryText>
           </Box>
-        </Flex>
-        <Flex mt={3} mb={2} justifyContent="center">
-          <PrimaryText size={16} weight={500}>
-            {messages[messageKey].tagLine}
-          </PrimaryText>
-        </Flex>
+        </ShopchatHeader>
       </Box>
-      <Box mt={3}>
-        <CardContainer py={3} px={3}>
+      <Container
+        my={3}
+        autoWidth={autoWidth}
+        mx="auto"
+        flexDirection="column"
+        justifyContent="center"
+      >
+        <CardContainer py={3} flexDirection="column">
           {children}
+          <Flex flexDirection="column">
+            <Box mt={2}>
+              <Flex alignItems="center" justifyContent="center">
+                <Box>
+                  <BlockText inline size={12}>
+                    Have a question? Whatsapp Us!
+                  </BlockText>
+                </Box>
+                <Box ml={2}>
+                  <a
+                    href="https://wa.me/919790946084"
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <img
+                      src="/assets/images/whatsapp.svg"
+                      width={18}
+                      alt="whatsapp"
+                    />
+                  </a>
+                </Box>
+              </Flex>
+            </Box>
+            <Box className="text-center" mt={2}>
+              <PrimaryText size={12} weight={600}>
+                © 2021 Shopchat Technologies Private Limited
+              </PrimaryText>
+              <PrimaryText size={12}>
+                Incorporation details - Corporate identity of the company is
+                U72900TN2021PTC148101 dated 23 Nov 2021
+              </PrimaryText>
+            </Box>
+          </Flex>
         </CardContainer>
-      </Box>
-      <ContactUsContainer mt={3} p={4}>
-        <Flex flexDirection="column">
-          <Box>
-            <BlockText type="brand">Contact Us</BlockText>
-          </Box>
-          <Box mt={2}>
-            <Flex alignItems="center">
-              <Box>
-                <PrimaryText inline>Have a question? Whatsapp Us!</PrimaryText>
-              </Box>
-              <Box ml={2}>
-                <a href="https://wa.me/919790946084" target="_blank" rel="noreferrer">
-                  <img
-                    src="/assets/images/whatsapp.svg"
-                    width={20}
-                    alt="whatsapp"
-                  />
-                </a>
-              </Box>
-            </Flex>
-          </Box>
-        </Flex>
-      </ContactUsContainer>
-    </Container>
+      </Container>
+    </Flex>
   )
 }
 
 FormLayout.defaultProps = {
-  isStore: false
+  isStore: false,
 }
 
 export default FormLayout
