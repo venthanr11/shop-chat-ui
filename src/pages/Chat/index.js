@@ -138,7 +138,8 @@ export default class Chat extends Component {
       .then(({ data }) => {
         this.setState((prevState) => ({
           senderName: data.resource.name,
-          senderThumbnail : data.resource.imgUrl
+          senderThumbnail : data.resource.imgUrl  
+          // || "https://www.onlinelogomaker.com/blog/wp-content/uploads/2017/06/shopping-online.jpg"
         }))
       })
       .catch((err) => console.log(err))
@@ -267,21 +268,22 @@ export default class Chat extends Component {
   }
 
   getTitleHeadingView() {
+    const {senderThumbnail} = this.state
     return (
       <Flex width={1} flexDirection="row" backgroundColor= "#edeff2" alignItems="center" justifyContent="space-between" marginBottom={16}>      
         <img src={'/assets/images/chevronLeft.svg'} alt="backButton" style={{marginLeft : 16, marginRight:16, padding:0, height:40, width:32}} onClick={this.onBackPress} />
+        <Flex style={{flex:1, flexDirection:"row", alignItems:"center", paddingTop:20,paddingBottom:20, markerStart:16, justifyContent:"start"}}>
+        {senderThumbnail && <img src={senderThumbnail}  style={{ height:40, width:40, alignSelf:"center", marginRight:8}}/>}
         <PrimaryText
           size={16}
           style={{
-            paddingTop: 24,
-            paddingBottom: 16,
-            marginBottom: 16,
             fontWeight: "bold",
             color:"#000000"
           }}
         >
           {this.getTitleHeading()}
           </PrimaryText>
+          </Flex>
           <img src={'/assets/images/home.svg'} alt="homeButton" style={{marginLeft : 16, marginRight:16, padding:0, height:40, width:32}} onClick={this.isCustomer ? this.onHomePress : this.onBackPress} />
 
       </Flex>
