@@ -1,11 +1,16 @@
 const getUserToken = () => window.localStorage.getItem("u_id")
 const setUserToken = (token) => window.localStorage.setItem("u_id", token)
 
-const getCustomerToken = () => window.localStorage.getItem("c_id")
-const setCustomerToken = (token) => window.localStorage.setItem("c_id", token)
-
 const getUserName = () => window.localStorage.getItem("u_name")
 const setUserName = (token) => window.localStorage.setItem("u_name", token)
+
+const getShopToken = () => window.localStorage.getItem("s_id")
+const setShopToken = (token) => window.localStorage.setItem("s_id", token)
+
+const getShopName = () => window.localStorage.getItem("s_name")
+const setShopName = (token) => window.localStorage.setItem("s_name", token)
+
+const isShopAccount = () => !!getShopToken()
 
 const uuid = () => {
   return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
@@ -15,4 +20,15 @@ const uuid = () => {
   })
 }
 
-export { getUserToken, setUserToken, uuid, getCustomerToken, setCustomerToken, getUserName, setUserName }
+export {
+  getUserToken,
+  setUserToken,
+  uuid,
+  getShopToken,
+  setShopToken,
+  getUserName,
+  setUserName,
+  isShopAccount,
+  getShopName,
+  setShopName,
+}

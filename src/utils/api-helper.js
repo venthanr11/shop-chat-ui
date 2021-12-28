@@ -12,7 +12,7 @@ const getData = ({ url }) =>
       .catch(reject)
   })
 
-const postData = ({ url, payload }, config) =>
+const postData = ({ url, payload = {} }, config) =>
   new Promise((resolve, reject) => {
     axios
       .post(`${apiHost}${url}`, payload, config)

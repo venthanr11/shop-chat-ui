@@ -81,28 +81,6 @@ const CategoryDropdowns = () => {
       .catch((error) => console.log(error))
   }, [selectedDepartments])
 
-  useEffect(() => {
-    if (!selectedCategories.length) {
-      setProductCategories([])
-      return
-    }
-    const payload = {
-      category_ids: [...selectedCategories],
-    }
-    postData({ url: "/product_category/v0/category", payload })
-      .then(({ data }) => {
-        let parsedProductCategories = []
-        data.forEach(({ product_categories }) => {
-          parsedProductCategories = product_categories.map(({ name, id }) => ({
-            label: name,
-            value: id,
-          }))
-        })
-        setProductCategories(parsedProductCategories)
-      })
-      .catch((error) => console.log(error))
-  }, [selectedCategories])
-
   return (
     <Fragment>
       <FieldContainer mx="auto" mt="14px">
@@ -119,7 +97,7 @@ const CategoryDropdowns = () => {
       </FieldContainer>
       <FieldContainer mx="auto" mt="14px">
         <Dropdown
-          name="category_ids"
+          name="categories"
           placeholder="Categories"
           label="Categories"
           items={categories}
@@ -128,15 +106,6 @@ const CategoryDropdowns = () => {
             setSelectedCategories(Object.keys(selectedCategs))
           }
           isSingleSelect
-        />
-      </FieldContainer>
-      <FieldContainer mx="auto" mt="14px">
-        <Dropdown
-          name="categories"
-          placeholder="Product Categories"
-          label="Product Categories"
-          items={productCategories}
-          noItemsMessage="Please choose `Categories` to proceed"
         />
       </FieldContainer>
     </Fragment>
@@ -162,7 +131,7 @@ const QueryForm = () => {
       .required("Product Title is required")
       .max(16, "Product Title must not exceed 16 characters"),
     description: Yup.string(),
-    categories: Yup.array().min(1, "Product Categories are required"),
+    categories: Yup.array().min(1, "Categories are required"),
     regions: Yup.array().min(1, "Area is required"),
     query_images: Yup.array(),
   })

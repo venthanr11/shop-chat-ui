@@ -32,14 +32,14 @@ const StoreCategoryImages = () => {
   const { resourceId, categoryId } = useParams()
 
   useEffect(() => {
-    getData({
+    postData({
       url: `/resource/v0/get_images_for_category?resource_unique_id=${resourceId}&category_id=${categoryId}`,
     })
       .then(({ data }) =>
         setImages(
-          data.map(({ resourceId, mediaURL }) => ({
+          data.map(({ id, mediaURL }) => ({
             image: mediaURL,
-            resourceId,
+            id,
           }))
         )
       )
@@ -54,8 +54,8 @@ const StoreCategoryImages = () => {
       const formData = new FormData()
       formData.append("resource_unique_id", resourceId)
       formData.append("category_id", categoryId)
-      imagesToAdd.forEach(({ image }) => {
-        formData.append("category_images", image)
+      imagesToAdd.forEach(({ image, file }) => {
+        formData.append("category_images", file)
       })
       const config = {
         headers: {
@@ -78,13 +78,18 @@ const StoreCategoryImages = () => {
     if (imagesToDelete.length === 0) {
       return Promise.resolve()
     }
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
     return new Promise((resolve, reject) => {
       const queryParams = imagesToDelete.map((id) => `image_ids=${id}`)
       postData({
         url: `/resource/v0/delete_images_from_category?${queryParams.join(
           "&"
         )}`,
-      })
+      }, config)
         .then(resolve)
         .catch(reject)
     })
@@ -98,7 +103,7 @@ const StoreCategoryImages = () => {
         </Box>
         <Box className="flex-grow" pt={3} my={4}>
           <ImageListContainer flexWrap="wrap" isEmpty={images.length === 0}>
-            {images.map(({ image, resourceId }, index) => {
+            {images.map(({ image, id }, index) => {
               return (
                 <Box key={index} mr={3} mb={2}>
                   <ImageUploadContainer>
@@ -115,15 +120,15 @@ const StoreCategoryImages = () => {
                           return prevImages
                         })
                         if (image === "" && file === null) {
-                          if (!!resourceId) {
+                          if (!!id) {
                             setImagesToDelete(([...prevImagesToDelete]) => {
-                              prevImagesToDelete.push(resourceId)
+                              prevImagesToDelete.push(id)
                               return prevImagesToDelete
                             })
                           }
                         } else {
                           setImagesToDelete(([...prevImagesToDelete]) => {
-                            prevImagesToDelete.push(resourceId)
+                            prevImagesToDelete.push(id)
                             return prevImagesToDelete
                           })
                           setImagesToAdd(([...prevImagesToAdd]) => {

@@ -1,14 +1,18 @@
-
-import styled from '@emotion/styled'
-import React, {useEffect, useRef, useState} from 'react'
-import { Box, Flex } from 'reflexbox'
-import { FormLayout } from '../../components/Layouts'
-import { EllipsisLoader } from '../../components/Loaders'
-import { BlockText, PrimaryText } from '../../components/Typography'
-import { postData } from '../../utils/api-helper'
-import { getShopToken, getUserToken, isShopAccount } from '../../utils/utility'
+import styled from "@emotion/styled"
+import React, { useEffect, useRef, useState } from "react"
+import { Box, Flex } from "reflexbox"
+import { FormLayout } from "../../components/Layouts"
+import { EllipsisLoader } from "../../components/Loaders"
+import { BlockText, PrimaryText } from "../../components/Typography"
+import { postData } from "../../utils/api-helper"
+import {
+  getShopName,
+  getShopToken,
+  getUserToken,
+  isShopAccount,
+} from "../../utils/utility"
 import dateFormat from "dateformat"
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom"
 
 const EmptyImageContainer = styled(Box)`
   background: #ffffff;
@@ -26,7 +30,7 @@ const ChatContainer = styled(Flex)`
   cursor: pointer;
 `
 
-const GroupImage = styled('img')`
+const GroupImage = styled("img")`
   border-radius: 50%;
   width: 48px;
   height: 48px;
@@ -61,8 +65,8 @@ const EmptyState = () => {
   )
 }
 
-const ChatGroup = ({chatGroup}) => {
-  const navigate = useNavigate();
+const ChatGroup = ({ chatGroup }) => {
+  const navigate = useNavigate()
   const userId = getUserToken()
   return (
     <Flex p={2} flexDirection="column" m={2}>
@@ -92,7 +96,9 @@ const ChatGroup = ({chatGroup}) => {
             p={2}
             alignItems="center"
             width={1}
-            onClick={() => navigate(`/chat/${chat.conversation_id}/customer/${userId}`)}
+            onClick={() =>
+              navigate(`/chat/${chat.conversation_id}/customer/${userId}`)
+            }
           >
             <Box>
               <ChatImage src={chat.resource_image_url} />
@@ -119,43 +125,28 @@ const ChatGroup = ({chatGroup}) => {
   )
 }
 
-const ChatsHome = () => {
+const ShopsChatList = () => {
   const [chatGroups, setChatGroups] = useState([])
   const intervalRef = useRef(null)
 
-  const isShop = isShopAccount()
-
   const getChatList = () => {
-    if(isShop) {
-      const payload = {
-        resource_id: getShopToken(),
-        offset: 1,
-        page_size: 50,
-      }
-      postData({ url: "/chat/v0/resource_chat_groups", payload })
-            .then(({ data }) => setChatGroups(data))
-            .catch((err) => console.log(err))
-    } else {
-      const payload = {
-        unique_customer_id: getUserToken(),
-        offset: 1,
-        page_size: 50,
-      }
-      postData({ url: "/chat/v0/customer_chat_groups", payload })
-            .then(({ data }) => setChatGroups(data))
-            .catch((err) => console.log(err))
+    const payload = {
+      resource_id: getShopToken(),
+      offset: 1,
+      page_size: 50,
     }
+    postData({ url: "/chat/v0/resource_chat_groups", payload })
+      .then(({ data }) => setChatGroups(data))
+      .catch((err) => console.log(err))
   }
 
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      getChatList()
-    },3000)
+    const intervalId = setInterval(getChatList, 3000)
     intervalRef.current = intervalId
   }, [])
 
   useEffect(() => {
-    if(chatGroups.length > 0) {
+    if (chatGroups.length > 0) {
       // @todo do not stop polling, since we need
       // to update UI with new messages as they come
       // clearInterval(intervalRef.current)
@@ -167,9 +158,9 @@ const ChatsHome = () => {
       {!!chatGroups.length ? (
         <Flex flexDirection="column" width={1}>
           <Box>
-            <BlockText>Chat Groups ({chatGroups.length})</BlockText>
+            <BlockText>Hello {getShopName()}</BlockText>
           </Box>
-          {chatGroups.map(chatGroup => {
+          {chatGroups.map((chatGroup) => {
             return (
               <ChatGroupsContainer m={2}>
                 <ChatGroup chatGroup={chatGroup} />
@@ -184,4 +175,4 @@ const ChatsHome = () => {
   )
 }
 
-export default ChatsHome
+export default ShopsChatList
