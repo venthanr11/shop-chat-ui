@@ -65,7 +65,7 @@ const StoreInfo = ({ storeInfo, storeCategories }) => {
                   }
                   postData(
                     {
-                      url: `/resource/v0/update_profile_image/${storeInfo.id}`,
+                      url: `/resource/v0/update_profile_image/${storeInfo.uniqueIdentifier}`,
                       payload: formData,
                     },
                     config
@@ -127,7 +127,7 @@ const StoreInfo = ({ storeInfo, storeCategories }) => {
                 key={index}
                 onClick={() => {
                   navigate(
-                    `/resource/${storeInfo.id}/category-images/${category.id}`
+                    `/resource/${storeInfo.uniqueIdentifier}/category-images/${category.id}`
                   )
                 }}
               >
