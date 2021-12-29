@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom"
 import { Flex, Box } from "reflexbox"
 import { FormLayout } from "../../components/Layouts"
 import { getData } from "../../utils/api-helper"
-import { setShopName, setShopToken } from "../../utils/utility"
+import { setShopIdentifier, setShopName, setShopToken } from "../../utils/utility"
 import StoreCard from "./StoreCard"
 
 const VerificationContainer = styled(Box)`
@@ -22,7 +22,8 @@ const StoreVerify = () => {
       url: `/resource/v0/resource_profile/${storeIdentifier}`,
     })
       .then(({ data }) => {
-        setShopToken(data.resource.uniqueIdentifier)
+        setShopToken(data.resource.id)
+        setShopIdentifier(data.resource.uniqueIdentifier)
         setShopName(data.resource.name)
         setStoreInfo(data)
       })

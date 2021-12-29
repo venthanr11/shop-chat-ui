@@ -10,7 +10,6 @@ const LoaderContainer = styled(Box)`
   .loading:after {
     overflow: hidden;
     display: inline-block;
-    vertical-align: bottom;
     -webkit-animation: ellipsis ease 900ms infinite;
     animation: ellipsis ease 900ms infinite;
     content: "\\2026"; /* ascii code for the ellipsis character */

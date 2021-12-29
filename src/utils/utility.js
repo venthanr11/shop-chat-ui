@@ -7,6 +7,9 @@ const setUserName = (token) => window.localStorage.setItem("u_name", token)
 const getShopToken = () => window.localStorage.getItem("s_id")
 const setShopToken = (token) => window.localStorage.setItem("s_id", token)
 
+const getShopIdentifier = () => window.localStorage.getItem("s_identifier")
+const setShopIdentifier = (token) => window.localStorage.setItem("s_identifier", token)
+
 const getShopName = () => window.localStorage.getItem("s_name")
 const setShopName = (token) => window.localStorage.setItem("s_name", token)
 
@@ -31,4 +34,6 @@ export {
   isShopAccount,
   getShopName,
   setShopName,
+  getShopIdentifier,
+  setShopIdentifier
 }

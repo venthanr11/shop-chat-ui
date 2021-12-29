@@ -34,8 +34,9 @@ const StoreIconContainer = styled(Box)`
 const StyledCallout = styled(Box)`
   padding: 8px;
   background: #ffffff;
-  border: 2px solid #ff3b3b;
+  border: 1px solid #8a2be2;
   border-radius: 6px;
+  text-align: center;
 `
 
 const StoreInfo = ({ storeInfo, storeCategories }) => {
@@ -110,7 +111,7 @@ const StoreInfo = ({ storeInfo, storeCategories }) => {
         </Box>
         <Box mt={3}>
           <Flex>
-            <StyledCallout>
+            <StyledCallout my={2}>
               <CalloutText>
                 Shopchat helps you chat and engage directly with customers
                 around you shop. Add product images and start getting messages
@@ -162,6 +163,7 @@ const StoreInfo = ({ storeInfo, storeCategories }) => {
 }
 
 const StoreCard = ({ storeInfo }) => {
+  const navigate = useNavigate()
   return (
     <Flex flexDirection="column">
       <StyledContainer
@@ -174,7 +176,7 @@ const StoreCard = ({ storeInfo }) => {
           storeCategories={storeInfo.categories}
         />
         <Box mt={3}>
-          <Button>Done</Button>
+          <Button onClick={() => navigate("/chats")}>Done</Button>
         </Box>
       </StyledContainer>
     </Flex>

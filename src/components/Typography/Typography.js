@@ -49,7 +49,7 @@ export const SectionHeading = styled("p")`
 `
 
 export const CalloutText = styled("p")`
-  color: #ff3b3b;
+  color: #8a2be2;
   line-height: 1.5;
   margin: 0;
   font-weight: 500;

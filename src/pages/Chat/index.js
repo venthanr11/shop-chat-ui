@@ -75,9 +75,9 @@ export default class Chat extends Component {
         }))
         if (userIdSender && userIdSender != "") {
           if (this.isCustomer) {
-             this.getShopDetails(userIdSender)
-          } else {
             this.getCustomerDetails(userIdSender)
+          } else {
+            this.getShopDetails(userIdSender)
           }
         }
       }

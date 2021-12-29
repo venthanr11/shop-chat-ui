@@ -1,41 +1,16 @@
 
 import styled from '@emotion/styled'
-import React, {useEffect, useRef, useState} from 'react'
+import React from 'react'
 import { Box, Flex } from 'reflexbox'
-import { FormLayout } from '../../components/Layouts'
 import { EllipsisLoader } from '../../components/Loaders'
-import { BlockText, PrimaryText } from '../../components/Typography'
-import { postData } from '../../utils/api-helper'
-import { getShopToken, getUserToken, isShopAccount } from '../../utils/utility'
-import dateFormat from "dateformat"
-import { useNavigate } from 'react-router-dom'
+import { PrimaryText } from '../../components/Typography'
+import { isShopAccount } from '../../utils/utility'
+import ShopsChatList from '../ShopsChatList/ShopsChatList'
+import CustomerChatList from '../CustomerChatList'
 
 const EmptyImageContainer = styled(Box)`
   background: #ffffff;
   border-radius: 10px;
-`
-
-const ChatGroupsContainer = styled(Box)`
-  background: #f9f2f3;
-  border-radius: 10px;
-`
-
-const ChatContainer = styled(Flex)`
-  background: #f1fdf5;
-  border-radius: 10px;
-  cursor: pointer;
-`
-
-const GroupImage = styled('img')`
-  border-radius: 50%;
-  width: 48px;
-  height: 48px;
-`
-
-const ChatImage = styled("img")`
-  border-radius: 5px;
-  width: 40px;
-  height: 40px;
 `
 
 const EmptyState = () => {
@@ -61,126 +36,10 @@ const EmptyState = () => {
   )
 }
 
-const ChatGroup = ({chatGroup}) => {
-  const navigate = useNavigate();
-  const userId = getUserToken()
-  return (
-    <Flex p={2} flexDirection="column" m={2}>
-      <Flex alignItems="center">
-        <Box>
-          <GroupImage src={chatGroup.query_primary_image_url} />
-        </Box>
-        <Box ml={3}>
-          <Flex flexDirection="column">
-            <Box>
-              <BlockText>
-                {chatGroup.title} ({chatGroup.customer_chats.length})
-              </BlockText>
-            </Box>
-            <Box mt={1}>
-              <PrimaryText size={12}>
-                {dateFormat(chatGroup.query_posted_time, "hh:MM TT", true)}
-              </PrimaryText>
-            </Box>
-          </Flex>
-        </Box>
-      </Flex>
-      {chatGroup.customer_chats.map((chat) => {
-        return (
-          <ChatContainer
-            mt={2}
-            p={2}
-            alignItems="center"
-            width={1}
-            onClick={() => navigate(`/chat/${chat.conversation_id}/customer/${userId}`)}
-          >
-            <Box>
-              <ChatImage src={chat.resource_image_url} />
-            </Box>
-            <Box ml={2} className="flex-grow">
-              <Flex flexDirection="column">
-                <Box>
-                  <BlockText size={12}>{chat.last_message_by}</BlockText>
-                </Box>
-                <Box mt={1}>
-                  <PrimaryText size={12}>{chat.last_message}</PrimaryText>
-                </Box>
-              </Flex>
-            </Box>
-            <Box>
-              <PrimaryText size={12}>
-                {dateFormat(chat.last_message_at, "hh:MM TT", true)}
-              </PrimaryText>
-            </Box>
-          </ChatContainer>
-        )
-      })}
-    </Flex>
-  )
-}
-
 const ChatsHome = () => {
-  const [chatGroups, setChatGroups] = useState([])
-  const intervalRef = useRef(null)
-
-  const isShop = isShopAccount()
-
-  const getChatList = () => {
-    if(isShop) {
-      const payload = {
-        resource_id: getShopToken(),
-        offset: 1,
-        page_size: 50,
-      }
-      postData({ url: "/chat/v0/resource_chat_groups", payload })
-            .then(({ data }) => setChatGroups(data))
-            .catch((err) => console.log(err))
-    } else {
-      const payload = {
-        unique_customer_id: getUserToken(),
-        offset: 1,
-        page_size: 50,
-      }
-      postData({ url: "/chat/v0/customer_chat_groups", payload })
-            .then(({ data }) => setChatGroups(data))
-            .catch((err) => console.log(err))
-    }
-  }
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      getChatList()
-    },3000)
-    intervalRef.current = intervalId
-  }, [])
-
-  useEffect(() => {
-    if(chatGroups.length > 0) {
-      // @todo do not stop polling, since we need
-      // to update UI with new messages as they come
-      // clearInterval(intervalRef.current)
-    }
-  }, [chatGroups])
 
   return (
-    <FormLayout>
-      {!!chatGroups.length ? (
-        <Flex flexDirection="column" width={1}>
-          <Box>
-            <BlockText>Chat Groups ({chatGroups.length})</BlockText>
-          </Box>
-          {chatGroups.map(chatGroup => {
-            return (
-              <ChatGroupsContainer m={2}>
-                <ChatGroup chatGroup={chatGroup} />
-              </ChatGroupsContainer>
-            )
-          })}
-        </Flex>
-      ) : (
-        <EmptyState />
-      )}
-    </FormLayout>
+    isShopAccount() ? <ShopsChatList /> : <CustomerChatList />
   )
 }
 

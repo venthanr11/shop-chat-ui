@@ -6,10 +6,9 @@ import { EllipsisLoader } from "../../components/Loaders"
 import { BlockText, PrimaryText } from "../../components/Typography"
 import { postData } from "../../utils/api-helper"
 import {
+  getShopIdentifier,
   getShopName,
   getShopToken,
-  getUserToken,
-  isShopAccount,
 } from "../../utils/utility"
 import dateFormat from "dateformat"
 import { useNavigate } from "react-router-dom"
@@ -36,30 +35,48 @@ const GroupImage = styled("img")`
   height: 48px;
 `
 
-const ChatImage = styled("img")`
-  border-radius: 5px;
-  width: 40px;
-  height: 40px;
+const ChatAvatarContainer = styled(Flex)`
+  background: #e3e3e3;
+  border-radius: 50%;
+  padding: 8px;
+  min-width: 36px;
+  min-height: 36px;
 `
+
+const ChatAvatar = ({size = 40, isMessage = false, avatar}) => {
+  const src = avatar || `/assets/images/${isMessage ? 'message' : 'person'}.svg`
+  return (
+    <ChatAvatarContainer justifyContent="center" alignItems="center">
+      <img src={src} width={`${size}px`}/>
+    </ChatAvatarContainer>
+  )
+}
 
 const EmptyState = () => {
   return (
-    <Flex flexDirection="column" justifyContent="center" alignItems="center">
+    <Flex flexDirection="column" justifyContent="center" alignItems="center" px={3} py={2}>
       <Box textAlign="center">
         <PrimaryText weight={500} inline>
-          Let's take a mindfulness minute, while our friends at the shop get
-          back to us
+          All customer queries for products from your shop will be
+          listed here!
         </PrimaryText>
       </Box>
-      <Box mt={2} mb={3}>
-        <EllipsisLoader />
-      </Box>
-      <EmptyImageContainer p={4}>
-        <img
-          src="/assets/images/mindfulness.svg"
-          alt="mindfulness"
-          width="160px"
-        />
+      <EmptyImageContainer p={4} width={1}>
+        <ChatContainer
+          mt={2}
+          p={2}
+          alignItems="center"
+          width={1}
+        >
+          <ChatAvatar />
+          <Box ml={3} className="flex-grow">
+            <Flex flexDirection="column">
+              <Box>
+                <BlockText size={12}><EllipsisLoader /></BlockText>
+              </Box>
+            </Flex>
+          </Box>
+        </ChatContainer>
       </EmptyImageContainer>
     </Flex>
   )
@@ -67,43 +84,38 @@ const EmptyState = () => {
 
 const ChatGroup = ({ chatGroup }) => {
   const navigate = useNavigate()
-  const userId = getUserToken()
+  const userId = getShopIdentifier()
   return (
     <Flex p={2} flexDirection="column" m={2}>
       <Flex alignItems="center">
         <Box>
-          <GroupImage src={chatGroup.query_primary_image_url} />
+          <ChatAvatar size={24} />
         </Box>
-        <Box ml={3}>
+        <Box ml={2}>
           <Flex flexDirection="column">
             <Box>
               <BlockText>
-                {chatGroup.title} ({chatGroup.customer_chats.length})
+                {chatGroup.customer_name} ({chatGroup.resource_chats.length})
               </BlockText>
-            </Box>
-            <Box mt={1}>
-              <PrimaryText size={12}>
-                {dateFormat(chatGroup.query_posted_time, "hh:MM TT", true)}
-              </PrimaryText>
             </Box>
           </Flex>
         </Box>
       </Flex>
-      {chatGroup.customer_chats.map((chat) => {
+      {chatGroup.resource_chats.map((chat) => {
         return (
           <ChatContainer
             mt={2}
-            p={2}
+            p="12px"
             alignItems="center"
             width={1}
             onClick={() =>
-              navigate(`/chat/${chat.conversation_id}/customer/${userId}`)
+              navigate(`/chat/${chat.conversation_id}/shop/${userId}`)
             }
           >
             <Box>
-              <ChatImage src={chat.resource_image_url} />
+              <ChatAvatar size={18} isMessage avatar={!!chat.query_images && !!chat.query_images.length && chat.query_images[0] }/>
             </Box>
-            <Box ml={2} className="flex-grow">
+            <Box ml={2} className="flex-grow" px={2}>
               <Flex flexDirection="column">
                 <Box>
                   <BlockText size={12}>{chat.last_message_by}</BlockText>
@@ -128,6 +140,7 @@ const ChatGroup = ({ chatGroup }) => {
 const ShopsChatList = () => {
   const [chatGroups, setChatGroups] = useState([])
   const intervalRef = useRef(null)
+  const navigate = useNavigate()
 
   const getChatList = () => {
     const payload = {
@@ -143,6 +156,12 @@ const ShopsChatList = () => {
   useEffect(() => {
     const intervalId = setInterval(getChatList, 3000)
     intervalRef.current = intervalId
+    getChatList()
+
+    return () => {
+      clearInterval(intervalRef.current)
+    };
+
   }, [])
 
   useEffect(() => {
@@ -156,13 +175,25 @@ const ShopsChatList = () => {
   return (
     <FormLayout>
       {!!chatGroups.length ? (
-        <Flex flexDirection="column" width={1}>
+        <Flex flexDirection="column" width={1} p={3}>
           <Box>
-            <BlockText>Hello {getShopName()}</BlockText>
+            <Flex px={1} alignItems="center">
+              <Box className="flex-grow">
+                <BlockText>Hello {getShopName()}!</BlockText>
+              </Box>
+              <Box mt="4px">
+                <Flex alignItems="center" style={{cursor: "pointer"}} onClick={() => navigate(`/onboard/${getShopIdentifier()}`)}>
+                  <PrimaryText inline size={12} weight="bold">Edit Info</PrimaryText>
+                  <Box ml={1}>
+                    <img src="/assets/images/edit.svg" width="12px" alt="edit" />
+                  </Box>
+                </Flex>
+              </Box>
+            </Flex>
           </Box>
           {chatGroups.map((chatGroup) => {
             return (
-              <ChatGroupsContainer m={2}>
+              <ChatGroupsContainer mt={3}>
                 <ChatGroup chatGroup={chatGroup} />
               </ChatGroupsContainer>
             )
