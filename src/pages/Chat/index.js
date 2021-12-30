@@ -41,7 +41,7 @@ export default class Chat extends Component {
   componentWillMount() {
 
     const chatRef = ref(firebaseDatabase, "messages/" + this.props.chatId)
-    const selfUUID = this.getSenderId()
+    const selfUUID = this.getSenderId()    
 
     if (this.props.shopId) {
       this.isCustomer = false 
@@ -75,9 +75,9 @@ export default class Chat extends Component {
         }))
         if (userIdSender && userIdSender != "") {
           if (this.isCustomer) {
-            this.getCustomerDetails(userIdSender)
-          } else {
             this.getShopDetails(userIdSender)
+          } else {
+            this.getCustomerDetails(userIdSender)
           }
         }
       }
