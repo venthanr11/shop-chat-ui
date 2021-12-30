@@ -1,8 +1,11 @@
 const getUserToken = () => window.localStorage.getItem("u_id")
 const setUserToken = (token) => window.localStorage.setItem("u_id", token)
 
-const getUserName = () => window.localStorage.getItem("u_name")
-const setUserName = (token) => window.localStorage.setItem("u_name", token)
+const getCustomerName = () => window.localStorage.getItem("u_name")
+const setCustomerName = (token) => window.localStorage.setItem("u_name", token)
+
+const getCustomerMobile = () => window.localStorage.getItem("u_mobile")
+const setCustomerMobile = (token) => window.localStorage.setItem("u_mobile", token)
 
 const getShopToken = () => window.localStorage.getItem("s_id")
 const setShopToken = (token) => window.localStorage.setItem("s_id", token)
@@ -12,6 +15,8 @@ const setShopIdentifier = (token) => window.localStorage.setItem("s_identifier",
 
 const getShopName = () => window.localStorage.getItem("s_name")
 const setShopName = (token) => window.localStorage.setItem("s_name", token)
+
+const getUtcDateTime = (date) => new Date(date+"+00:00")
 
 const isShopAccount = () => !!getShopToken()
 
@@ -29,11 +34,14 @@ export {
   uuid,
   getShopToken,
   setShopToken,
-  getUserName,
-  setUserName,
+  getCustomerName,
+  setCustomerName,
   isShopAccount,
   getShopName,
   setShopName,
   getShopIdentifier,
-  setShopIdentifier
+  setShopIdentifier,
+  getCustomerMobile,
+  setCustomerMobile,
+  getUtcDateTime
 }

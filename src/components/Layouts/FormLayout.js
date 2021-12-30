@@ -1,5 +1,6 @@
 import styled from "@emotion/styled"
 import React from "react"
+import { useNavigate } from "react-router-dom"
 import { Flex, Box } from "reflexbox"
 import { BlockText, PrimaryText } from "../Typography"
 
@@ -8,6 +9,7 @@ const ShopchatHeader = styled(Flex)`
   -webkit-box-shadow: 3px 3px 9px -8px rgb(0 0 0 / 50%);
   -moz-box-shadow: 3px 3px 9px -8px rgba(0, 0, 0, 0.5);
   box-shadow: 3px 3px 9px -8px rgb(0 0 0 / 50%);
+  cursor: pointer;
 `
 
 const Container = styled(Flex)`
@@ -24,14 +26,6 @@ const CardContainer = styled(Flex)`
   -moz-box-shadow: 0px 0px 12px -4px rgb(60 60 60 / 0.5%);
 `
 
-const ContactUsContainer = styled(Box)`
-  background-color: #ffffff;
-  border-radius: 10px;
-  box-shadow: 0px 0px 12px -4px rgb(60 60 60 / 50%);
-  -webkit-box-shadow: 0px 0px 12px -4px rgb(60 60 60 / 50%);
-  -moz-box-shadow: 0px 0px 12px -4px rgb(60 60 60 / 0.5%);
-`
-
 const messages = {
   store: {
     tagLine: "Chat and engage directly with customers in your locality",
@@ -42,11 +36,11 @@ const messages = {
 }
 
 const FormLayout = ({ autoWidth, isStore, children }) => {
-  const messageKey = isStore ? "store" : "customer"
+  const navigate = useNavigate()
   return (
     <Flex flexDirection="column" justifyContent="center">
       <Box>
-        <ShopchatHeader alignItems="center" px={3} py={2}>
+        <ShopchatHeader alignItems="center" px={3} py={2} onClick={() => navigate("/")}>
           <Box>
             <img
               src="/assets/images/shopchat-logo.png"

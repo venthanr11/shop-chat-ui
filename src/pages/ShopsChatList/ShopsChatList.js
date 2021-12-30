@@ -9,6 +9,7 @@ import {
   getShopIdentifier,
   getShopName,
   getShopToken,
+  getUtcDateTime,
 } from "../../utils/utility"
 import dateFormat from "dateformat"
 import { useNavigate } from "react-router-dom"
@@ -101,9 +102,10 @@ const ChatGroup = ({ chatGroup }) => {
           </Flex>
         </Box>
       </Flex>
-      {chatGroup.resource_chats.map((chat) => {
+      {chatGroup.resource_chats.map((chat, index) => {
         return (
           <ChatContainer
+            key={index}
             mt={2}
             p="12px"
             alignItems="center"
@@ -126,8 +128,8 @@ const ChatGroup = ({ chatGroup }) => {
               </Flex>
             </Box>
             <Box>
-              <PrimaryText size={12}>
-                {dateFormat(chat.last_message_at, "hh:MM TT", true)}
+              <PrimaryText size={12} nowrap>
+                {dateFormat(getUtcDateTime(chat.last_message_at), "hh:MM TT", true)}
               </PrimaryText>
             </Box>
           </ChatContainer>
@@ -191,9 +193,9 @@ const ShopsChatList = () => {
               </Box>
             </Flex>
           </Box>
-          {chatGroups.map((chatGroup) => {
+          {chatGroups.map((chatGroup, index) => {
             return (
-              <ChatGroupsContainer mt={3}>
+              <ChatGroupsContainer mt={3} key={index}>
                 <ChatGroup chatGroup={chatGroup} />
               </ChatGroupsContainer>
             )

@@ -7,7 +7,7 @@ import ChatItem from "./ChatItem"
 import { PrimaryText } from "../../components/Typography"
 import { useNavigate, useParams } from "react-router"
 import {
-  getUserName,
+  getCustomerName,
 } from "../../utils/utility"
 import { getData, postData } from "../../utils/api-helper"
 import { Flex } from "reflexbox"
@@ -21,7 +21,7 @@ export default class Chat extends Component {
 
     this.state = {
       messages: [],
-      username: getUserName(),
+      username: getCustomerName(),
       senderName : "",
       senderThumbnail : ""
     }

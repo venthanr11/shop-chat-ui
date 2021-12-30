@@ -31,6 +31,7 @@ export const PrimaryText = styled("p")`
   line-height: 1.5;
   margin: 0;
   display: ${({ inline }) => (inline ? "inline" : "block")};
+  white-space: ${({nowrap}) => (nowrap ? 'nowrap' : 'inherit')};
 `
 
 export const BlockText = styled("p")`
@@ -39,6 +40,7 @@ export const BlockText = styled("p")`
   font-weight: ${({ weight = 600 }) => weight};
   font-weight: 600;
   margin: 0;
+  white-space: ${({nowrap}) => nowrap ? 'nowrap' : 'inherit'};
 `
 
 export const SectionHeading = styled("p")`
@@ -46,6 +48,7 @@ export const SectionHeading = styled("p")`
   font-size: 16px;
   font-weight: 600;
   margin: 0;
+  white-space: ${({nowrap}) => nowrap ? 'nowrap' : 'inherit'};
 `
 
 export const CalloutText = styled("p")`
@@ -54,4 +57,5 @@ export const CalloutText = styled("p")`
   margin: 0;
   font-weight: 500;
   font-size: 13px;
+  white-space: ${({nowrap}) => nowrap ? 'nowrap' : 'normal'};
 `

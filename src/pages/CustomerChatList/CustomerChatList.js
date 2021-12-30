@@ -6,7 +6,7 @@ import { FormLayout } from '../../components/Layouts'
 import { EllipsisLoader } from '../../components/Loaders'
 import { BlockText, PrimaryText } from '../../components/Typography'
 import { postData } from '../../utils/api-helper'
-import { getUserToken, isShopAccount } from '../../utils/utility'
+import { getCustomerMobile, getUserToken, getUtcDateTime, isShopAccount } from '../../utils/utility'
 import dateFormat from "dateformat"
 import { useNavigate } from 'react-router-dom'
 
@@ -85,19 +85,20 @@ const ChatGroup = ({chatGroup}) => {
           </Flex>
         </Box>
       </Flex>
-      {chatGroup.customer_chats.map((chat) => {
+      {chatGroup.customer_chats.map((chat, index) => {
         return (
           <ChatContainer
+            key={index}
             mt={2}
             p={2}
             alignItems="center"
             width={1}
             onClick={() => navigate(`/chat/${chat.conversation_id}/customer/${userId}`)}
           >
-            <Box>
+            <Box pr={2} style={{minWidth: '40px'}}>
               <ChatImage src={chat.resource_image_url} />
             </Box>
-            <Box ml={2} className="flex-grow">
+            <Box px={2} >
               <Flex flexDirection="column">
                 <Box>
                   <BlockText size={12}>{chat.last_message_by}</BlockText>
@@ -107,9 +108,9 @@ const ChatGroup = ({chatGroup}) => {
                 </Box>
               </Flex>
             </Box>
-            <Box>
-              <PrimaryText size={12}>
-                {dateFormat(chat.last_message_at, "hh:MM TT", true)}
+            <Box px={2} style={{minWidth: '66px'}}>
+              <PrimaryText size={12} nowrap>
+                {dateFormat(getUtcDateTime(chat.last_message_at), "hh:MM TT")}
               </PrimaryText>
             </Box>
           </ChatContainer>
@@ -159,12 +160,22 @@ const CustomerChatList = () => {
     <FormLayout>
       {!!chatGroups.length ? (
         <Flex flexDirection="column" width={1} p={3}>
-          <Box>
-            <BlockText>Chat Groups ({chatGroups.length})</BlockText>
-          </Box>
-          {chatGroups.map(chatGroup => {
+          <Flex px={1} alignItems="center">
+            <Box className="flex-grow">
+              <BlockText>Chat Groups ({chatGroups.length})</BlockText>
+            </Box>
+            <Box mt="4px">
+              <Flex alignItems="center" style={{cursor: "pointer"}}>
+                <Box mr={1}>
+                  <img src="/assets/images/phone.svg" width="12px" alt="edit" />
+                </Box>
+                <PrimaryText inline size={12} weight="bold">{getCustomerMobile()}</PrimaryText>
+              </Flex>
+            </Box>
+          </Flex>
+          {chatGroups.map((chatGroup, index) => {
             return (
-              <ChatGroupsContainer mt={3}>
+              <ChatGroupsContainer mt={3} key={index}>
                 <ChatGroup chatGroup={chatGroup} />
               </ChatGroupsContainer>
             )

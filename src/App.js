@@ -54,6 +54,7 @@ function App() {
           <Route path="/chat/:chatId" element={<WrappedComponent/>} />
           <Route path="/chat/:chatId/customer/:customerId" element={<WrappedComponent/>} />
           <Route path="/chat/:chatId/shop/:shopId" element={<WrappedComponent/>} />
+          <Route path="*" element={<QueryForm />} />
         </Routes>
       </Router>
     </div>

@@ -13,9 +13,11 @@ import FormSubmit from "../../components/FormSubmit"
 import { FormLayout } from "../../components/Layouts"
 import { getData, postData } from "../../utils/api-helper"
 import {
-  getUserName,
+  getCustomerName,
   getUserToken,
-  setUserName,
+  setCustomerName,
+  getCustomerMobile,
+  setCustomerMobile,
   setUserToken,
   uuid,
 } from "../../utils/utility"
@@ -127,6 +129,7 @@ const QueryForm = () => {
 
   const validationSchema = Yup.object().shape({
     name: Yup.string().required("Name is required"),
+    contact_number: Yup.string().required("Mobile Number is required"),
     title: Yup.string()
       .required("Product Title is required")
       .max(16, "Product Title must not exceed 16 characters"),
@@ -136,7 +139,7 @@ const QueryForm = () => {
     query_images: Yup.array(),
   })
 
-  const getUniqueUserToken = (name) => {
+  const getUniqueUserToken = (name, contactNumber) => {
     return new Promise((resolve, reject) => {
       let userToken = getUserToken()
       if (!!userToken) {
@@ -146,12 +149,13 @@ const QueryForm = () => {
       const payload = {
         unique_client_id: uuid(),
         name,
-        contact_number: "",
+        contact_number: contactNumber,
       }
       postData({ url: "/customer/v0/create", payload })
         .then(({ data }) => {
           setUserToken(data.uniqueId)
-          setUserName(data.name)
+          setCustomerName(data.name)
+          setCustomerMobile(data.contactNumber)
           resolve(data.uniqueId)
         })
         .catch((err) => console.log(err))
@@ -159,7 +163,7 @@ const QueryForm = () => {
   }
 
   const postQuery = (data, actions) => {
-    getUniqueUserToken(data.name).then((userToken) => {
+    getUniqueUserToken(data.name, data.contact_number).then((userToken) => {
       const payload = {
         title: data.title,
         description: data.description,
@@ -197,7 +201,8 @@ const QueryForm = () => {
         </Box>
         <Formik
           initialValues={{
-            name: getUserName() || "",
+            name: getCustomerName() || "",
+            contact_number: getCustomerMobile() || "",
             title: "",
             description: "",
             regions: [],
@@ -216,6 +221,14 @@ const QueryForm = () => {
                   name="name"
                   placeholder="John Doe"
                   label="Your Name"
+                  isRequired
+                />
+              </FieldContainer>
+              <FieldContainer mx="auto" mt={3}>
+                <Input
+                  name="contact_number"
+                  placeholder="98765 00000"
+                  label="Mobile Number"
                   isRequired
                 />
               </FieldContainer>
