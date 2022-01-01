@@ -28,14 +28,16 @@ const ChatContainer = styled(Flex)`
 
 const GroupImage = styled('img')`
   border-radius: 50%;
-  width: 48px;
-  height: 48px;
+  width: 28px;
+  height: 28px;
+  margin: 0 4px;
+  margin-left: 10px;
 `
 
 const ChatImage = styled("img")`
   border-radius: 5px;
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
 `
 
 const EmptyState = () => {
@@ -64,13 +66,18 @@ const EmptyState = () => {
 const ChatGroup = ({chatGroup}) => {
   const navigate = useNavigate();
   const userId = getUserToken()
+
+  let avatar = !!chatGroup.query_images && !!chatGroup.query_images.length && chatGroup.query_images[0]
+  if(!!avatar) {
+    avatar = avatar.replace(/\[/g, "").replace(/\]/g, "")
+  }
   return (
     <Flex p={2} flexDirection="column" m={2}>
       <Flex alignItems="center">
         <Box>
-          <GroupImage src={chatGroup.query_primary_image_url} />
+          <GroupImage src={avatar || `/assets/images/product.svg`} />
         </Box>
-        <Box ml={3}>
+        <Box ml={2}>
           <Flex flexDirection="column">
             <Box>
               <BlockText>
@@ -90,27 +97,27 @@ const ChatGroup = ({chatGroup}) => {
           <ChatContainer
             key={index}
             mt={2}
-            p={2}
+            py={2}
             alignItems="center"
             width={1}
             onClick={() => navigate(`/chat/${chat.conversation_id}/customer/${userId}`)}
           >
-            <Box pr={2} style={{minWidth: '40px'}}>
+            <Box mx={2} style={{minWidth: '36px'}}>
               <ChatImage src={chat.resource_image_url} />
             </Box>
-            <Box px={2} >
+            <Box className="flex-grow" pr={2} >
               <Flex flexDirection="column">
                 <Box>
-                  <BlockText size={12}>{chat.last_message_by}</BlockText>
+                  <BlockText size={12}>{chat.resource_name}</BlockText>
                 </Box>
                 <Box mt={1}>
                   <PrimaryText size={12}>{chat.last_message}</PrimaryText>
                 </Box>
               </Flex>
             </Box>
-            <Box px={2} style={{minWidth: '66px'}}>
+            <Box pl={2} style={{minWidth: '72px'}}>
               <PrimaryText size={12} nowrap>
-                {dateFormat(getUtcDateTime(chat.last_message_at), "hh:MM TT")}
+                {chat.last_message_at && dateFormat(getUtcDateTime(chat.last_message_at), "hh:MM TT")}
               </PrimaryText>
             </Box>
           </ChatContainer>

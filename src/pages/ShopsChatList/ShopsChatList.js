@@ -103,33 +103,37 @@ const ChatGroup = ({ chatGroup }) => {
         </Box>
       </Flex>
       {chatGroup.resource_chats.map((chat, index) => {
+        let avatar = !!chat.query_images && !!chat.query_images.length && chat.query_images[0]
+        if(!!avatar) {
+          avatar = avatar.replace(/\[/g, "").replace(/\]/g, "")
+        }
         return (
           <ChatContainer
             key={index}
             mt={2}
-            p="12px"
+            py="12px"
             alignItems="center"
             width={1}
             onClick={() =>
               navigate(`/chat/${chat.conversation_id}/shop/${userId}`)
             }
           >
-            <Box>
-              <ChatAvatar size={18} isMessage avatar={!!chat.query_images && !!chat.query_images.length && chat.query_images[0] }/>
+            <Box mx={2} style={{minWidth: '36px'}}>
+              <ChatAvatar size={18} isMessage avatar={avatar}/>
             </Box>
-            <Box ml={2} className="flex-grow" px={2}>
+            <Box className="flex-grow" pr={2}>
               <Flex flexDirection="column">
                 <Box>
-                  <BlockText size={12}>{chat.last_message_by}</BlockText>
+                  <BlockText size={12}>{chat.query_title}</BlockText>
                 </Box>
                 <Box mt={1}>
                   <PrimaryText size={12}>{chat.last_message}</PrimaryText>
                 </Box>
               </Flex>
             </Box>
-            <Box>
+            <Box pl={2} style={{minWidth: '72px'}}>
               <PrimaryText size={12} nowrap>
-                {dateFormat(getUtcDateTime(chat.last_message_at), "hh:MM TT", true)}
+                {chat.last_message_at && dateFormat(getUtcDateTime(chat.last_message_at), "hh:MM TT", true)}
               </PrimaryText>
             </Box>
           </ChatContainer>

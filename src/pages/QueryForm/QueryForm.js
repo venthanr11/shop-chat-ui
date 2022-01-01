@@ -230,6 +230,7 @@ const QueryForm = () => {
                   placeholder="98765 00000"
                   label="Mobile Number"
                   isRequired
+                  maxlength={10}
                 />
               </FieldContainer>
               <FieldContainer mx="auto" mt="14px">
